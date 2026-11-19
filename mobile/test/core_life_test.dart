@@ -1,3 +1,6 @@
+import 'package:lifeverse_ai/features/modules/data/module_repository.dart';
+import 'package:lifeverse_ai/features/modules/application/module_providers.dart';
+import 'package:lifeverse_ai/features/modules/data/vault_file_gateway.dart';
 import 'package:lifeverse_ai/features/agents/data/agent_repository.dart';
 import 'package:lifeverse_ai/features/agents/application/agent_providers.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,8 @@ Future<void> mountCore(
   double scale = 1,
   bool capture = false,
   AgentRepository? agents,
+  ModuleRepository? modules,
+  VaultFileGateway? files,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -41,6 +46,9 @@ Future<void> mountCore(
         configProvider.overrideWithValue(const AppConfig()),
         preferencesProvider.overrideWithValue(preferences),
         lifeRepositoryProvider.overrideWithValue(repo),
+        if (modules != null)
+          moduleRepositoryProvider.overrideWithValue(modules),
+        if (files != null) vaultFileGatewayProvider.overrideWithValue(files),
         if (agents != null) agentRepositoryProvider.overrideWithValue(agents),
         currentSessionProvider.overrideWithValue(
           Session(

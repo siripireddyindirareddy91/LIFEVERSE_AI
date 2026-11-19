@@ -67,3 +67,28 @@ checks freshness, then executes selected actions in one savepoint/transaction.
 Decisions are idempotent; usage counters survive history deletion for rate limits.
 Run/history retention is 30 days by default, enforced by the trusted daily job.
 Migration downgrade destroys Phase 4 data; use disposable databases for testing.
+
+
+## Phase 5 - revision 0004
+
+`module_records` stores sixteen strictly validated domain payloads as JSONB, with
+indexed kind/owner/parent, optimistic revision UUID and create request identifiers.
+Composite owner/parent foreign keys prevent cross-account links and cascade owned
+course/trip child records. API validation permits only a course or trip parent for
+its known child kinds. `module_operations` keeps content-free Planner retry IDs,
+input hashes and resulting task IDs; deleting records does not duplicate tasks.
+
+`vault_files` stores encrypted bytes, key ID, owner-bound file identity and private
+metadata. Ciphertext is deferred in ORM queries, so listing/AI metadata queries do
+not load document bytes. `knowledge_links` uses composite owner/source FKs and
+cascade deletion. Every new table has forced owner RLS and an owner index; the
+queue dispatcher has no grants on any of these tables. Migration credentials own
+tables; runtime remains restricted. No direct mobile database access is introduced.
+
+Finance values are validated fixed-scale Decimals, serialized as decimal strings.
+Reports use Decimal arithmetic and keep currencies separate. Monthly reports use
+the user's profile date; transaction dates are explicitly user-entered dates.
+AI context fetches at most eight explicitly shared records. Revision/source checks
+prevent approval based on edited, deleted or unshared evidence. Approved generated
+records start private. Daily retention now also removes expired encrypted files.
+Rollback of `0004` destroys Phase 5 records/files/links; test only on disposable data.

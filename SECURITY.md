@@ -41,3 +41,24 @@ Personal prompts/excerpts remain in owner-only run history until deletion/expiry
 index removal or consent revocation does not erase earlier history copies.
 Provider errors are sanitized, tracing is disabled, and execution logs omit raw
 provider bodies and hidden reasoning. A production audit remains outstanding.
+
+
+Phase 5 adds per-record AI sharing, disabled by default, across advanced modules.
+The original per-run scopes and global consent remain required. New specialists
+can prepare typed internal records; the existing level-2 preview/digest/nonce and
+transactional executor apply them only after approval. Evidence revisions are
+checked again. Generated records start private and cannot grant their own consent.
+No financial transfer, booking, medical decision or external message tool exists.
+
+Life Vault uses AES-256-GCM with random nonces and owner/file identity as associated
+data, forced RLS, bounded uploads/quota, type validation, integrity verification and
+no-store downloads. Metadata is private but not encrypted in the database; only
+file bytes are encrypted. Agents can receive opted-in metadata, never file bytes.
+Key management/rotation/backups belong to trusted server operations. OCR, biometric
+unlock, malware scanning and end-to-end encryption are not implemented here.
+
+Monthly finance reports, quiz scores and scenario calculations use actual stored
+inputs. Scenario rates/hours are user assumptions. Resume keyword checks are
+literal comparisons, not an ATS certification. No job, qualification, price or
+medical conclusion is represented as verified external evidence. Production
+configuration, physical-device testing and security audit remain outstanding.

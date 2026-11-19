@@ -1,0 +1,1132 @@
+{
+  "schemas": {
+    "entry": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "direction": {
+          "default": "expense",
+          "enum": [
+            "income",
+            "expense"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "category": {
+          "default": "Other",
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "day": {
+          "format": "date",
+          "title": "Day",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "amount",
+        "day"
+      ],
+      "title": "Entry",
+      "type": "object"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "category": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "month": {
+          "format": "date",
+          "title": "Month",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "amount",
+        "category",
+        "month"
+      ],
+      "title": "Budget",
+      "type": "object"
+    },
+    "saving": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "target_amount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Target Amount"
+        },
+        "saved_amount": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Saved Amount"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "target_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Date"
+        }
+      },
+      "required": [
+        "title",
+        "target_amount"
+      ],
+      "title": "Saving",
+      "type": "object"
+    },
+    "bill": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Amount"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "due_date": {
+          "format": "date",
+          "title": "Due Date",
+          "type": "string"
+        },
+        "recurrence": {
+          "default": "none",
+          "enum": [
+            "none",
+            "monthly",
+            "yearly"
+          ],
+          "title": "Recurrence",
+          "type": "string"
+        },
+        "subscription": {
+          "default": false,
+          "title": "Subscription",
+          "type": "boolean"
+        },
+        "paid": {
+          "default": false,
+          "title": "Paid",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title",
+        "amount",
+        "due_date"
+      ],
+      "title": "Bill",
+      "type": "object"
+    },
+    "course": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "subject": {
+          "default": "General",
+          "maxLength": 80,
+          "title": "Subject",
+          "type": "string"
+        },
+        "resource_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resource Url"
+        },
+        "total_units": {
+          "default": 1,
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Total Units",
+          "type": "integer"
+        },
+        "completed_units": {
+          "default": 0,
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Completed Units",
+          "type": "integer"
+        },
+        "weekly_minutes": {
+          "default": 60,
+          "maximum": 10080,
+          "minimum": 0,
+          "title": "Weekly Minutes",
+          "type": "integer"
+        },
+        "target_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Date"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "Course",
+      "type": "object"
+    },
+    "study_note": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "content": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "content"
+      ],
+      "title": "StudyNote",
+      "type": "object"
+    },
+    "flashcard": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "question": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "answer": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Answer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "question",
+        "answer"
+      ],
+      "title": "Flashcard",
+      "type": "object"
+    },
+    "quiz": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "question": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "option_a": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Option A",
+          "type": "string"
+        },
+        "option_b": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Option B",
+          "type": "string"
+        },
+        "option_c": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Option C",
+          "type": "string"
+        },
+        "option_d": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Option D",
+          "type": "string"
+        },
+        "correct": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "title": "Correct",
+          "type": "string"
+        },
+        "explanation": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "question",
+        "option_a",
+        "option_b",
+        "option_c",
+        "option_d",
+        "correct"
+      ],
+      "title": "Quiz",
+      "type": "object"
+    },
+    "application": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "company": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Company",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "status": {
+          "default": "saved",
+          "enum": [
+            "saved",
+            "applied",
+            "screening",
+            "interview",
+            "offer",
+            "rejected",
+            "withdrawn"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "job_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Job Url"
+        },
+        "applied_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applied On"
+        },
+        "follow_up": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Follow Up"
+        }
+      },
+      "required": [
+        "title",
+        "company",
+        "role"
+      ],
+      "title": "Application",
+      "type": "object"
+    },
+    "resume": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "headline": {
+          "default": "",
+          "maxLength": 160,
+          "title": "Headline",
+          "type": "string"
+        },
+        "summary": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Summary",
+          "type": "string"
+        },
+        "skills": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Skills",
+          "type": "string"
+        },
+        "experience": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Experience",
+          "type": "string"
+        },
+        "education": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Education",
+          "type": "string"
+        },
+        "projects": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Projects",
+          "type": "string"
+        },
+        "job_description": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Job Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "Resume",
+      "type": "object"
+    },
+    "wellness_log": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "day": {
+          "format": "date",
+          "title": "Day",
+          "type": "string"
+        },
+        "sleep_hours": {
+          "anyOf": [
+            {
+              "maximum": 24.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Sleep Hours"
+        },
+        "water_ml": {
+          "default": 0,
+          "maximum": 20000,
+          "minimum": 0,
+          "title": "Water Ml",
+          "type": "integer"
+        },
+        "activity_minutes": {
+          "default": 0,
+          "maximum": 1440,
+          "minimum": 0,
+          "title": "Activity Minutes",
+          "type": "integer"
+        },
+        "mood": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mood"
+        },
+        "journal": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Journal",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "day"
+      ],
+      "title": "Wellness",
+      "type": "object"
+    },
+    "routine": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "time_of_day": {
+          "default": "anytime",
+          "enum": [
+            "morning",
+            "afternoon",
+            "evening",
+            "anytime"
+          ],
+          "title": "Time Of Day",
+          "type": "string"
+        },
+        "minutes": {
+          "default": 10,
+          "maximum": 1440,
+          "minimum": 1,
+          "title": "Minutes",
+          "type": "integer"
+        },
+        "active": {
+          "default": true,
+          "title": "Active",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "Routine",
+      "type": "object"
+    },
+    "trip": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "destination": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Destination",
+          "type": "string"
+        },
+        "country": {
+          "default": "",
+          "maxLength": 80,
+          "title": "Country",
+          "type": "string"
+        },
+        "starts_on": {
+          "format": "date",
+          "title": "Starts On",
+          "type": "string"
+        },
+        "ends_on": {
+          "format": "date",
+          "title": "Ends On",
+          "type": "string"
+        },
+        "budget": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Budget"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "destination",
+        "starts_on",
+        "ends_on"
+      ],
+      "title": "Trip",
+      "type": "object"
+    },
+    "itinerary": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "day": {
+          "format": "date",
+          "title": "Day",
+          "type": "string"
+        },
+        "time": {
+          "default": "09:00",
+          "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+          "title": "Time",
+          "type": "string"
+        },
+        "location": {
+          "default": "",
+          "maxLength": 200,
+          "title": "Location",
+          "type": "string"
+        },
+        "category": {
+          "default": "activity",
+          "enum": [
+            "activity",
+            "flight",
+            "stay",
+            "transport",
+            "meal"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "cost": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Cost"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "booking_reference": {
+          "default": "",
+          "maxLength": 120,
+          "title": "Booking Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "day"
+      ],
+      "title": "Itinerary",
+      "type": "object"
+    },
+    "packing": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "packed": {
+          "default": false,
+          "title": "Packed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "title": "Packing",
+      "type": "object"
+    },
+    "scenario": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 8000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "scenario_type": {
+          "default": "savings",
+          "enum": [
+            "savings",
+            "learning",
+            "career",
+            "time"
+          ],
+          "title": "Scenario Type",
+          "type": "string"
+        },
+        "horizon_months": {
+          "default": 12,
+          "maximum": 120,
+          "minimum": 1,
+          "title": "Horizon Months",
+          "type": "integer"
+        },
+        "starting_amount": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Starting Amount"
+        },
+        "monthly_contribution": {
+          "anyOf": [
+            {
+              "maximum": 999999999999.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Monthly Contribution"
+        },
+        "annual_rate": {
+          "anyOf": [
+            {
+              "maximum": 50.0,
+              "minimum": -50.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Annual Rate"
+        },
+        "currency": {
+          "default": "INR",
+          "enum": [
+            "INR",
+            "USD",
+            "EUR",
+            "GBP",
+            "JPY",
+            "AUD",
+            "CAD",
+            "CHF",
+            "CNY",
+            "SGD",
+            "AED"
+          ],
+          "title": "Currency",
+          "type": "string"
+        },
+        "hours_per_week": {
+          "anyOf": [
+            {
+              "maximum": 168.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "0",
+          "title": "Hours Per Week"
+        },
+        "target_hours": {
+          "default": 100,
+          "maximum": 100000,
+          "minimum": 1,
+          "title": "Target Hours",
+          "type": "integer"
+        },
+        "assumptions": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Assumptions",
+          "type": "string"
+        },
+        "risks": {
+          "default": "",
+          "maxLength": 4000,
+          "title": "Risks",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "assumptions"
+      ],
+      "title": "Scenario",
+      "type": "object"
+    }
+  }
+}

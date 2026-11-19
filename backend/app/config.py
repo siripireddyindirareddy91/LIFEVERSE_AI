@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     agent_run_timeout_seconds: int = Field(default=240, ge=60, le=360)
     agent_approval_minutes: int = Field(default=60, ge=5, le=1440)
     agent_history_days: int = Field(default=30, ge=1, le=30)
+    vault_encryption_keys: dict[str, SecretStr] = {}
+    vault_active_key_id: str = Field(default="v1", min_length=1, max_length=40)
     ai_embedding_model: str = Field(default="", max_length=120)
     ai_embedding_dimensions: int = Field(default=1536, ge=64, le=3072)
     retrieval_candidate_limit: int = Field(default=1000, ge=50, le=2000)

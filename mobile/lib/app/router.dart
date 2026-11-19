@@ -1,3 +1,7 @@
+import '../features/modules/presentation/module_screen.dart';
+import '../features/modules/presentation/vault_screen.dart';
+import '../features/modules/presentation/knowledge_universe_screen.dart';
+import '../features/modules/domain/module_spec.dart';
 import '../features/agents/presentation/agent_screens.dart';
 import '../features/agents/presentation/knowledge_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +32,41 @@ final routerProvider = Provider<GoRouter>((ref) {
             FoundationShell(location: state.uri.path, child: child),
         routes: [
           GoRoute(
+            path: '/modules/:module',
+            builder: (context, state) {
+              final id = state.pathParameters['module']!;
+              return advancedModules.containsKey(id)
+                  ? AccountGate(
+                      child: AdvancedModuleScreen(
+                        key: ValueKey(id),
+                        module: id,
+                      ),
+                    )
+                  : const ExploreUniverseScreen();
+            },
+          ),
+          GoRoute(
+            path: '/vault',
+            builder: (context, state) =>
+                const AccountGate(child: VaultScreen()),
+          ),
+          GoRoute(
+            path: '/knowledge-universe',
+            builder: (context, state) =>
+                const AccountGate(child: KnowledgeUniverseScreen()),
+          ),
+          GoRoute(
             path: '/agents',
             builder: (context, state) =>
                 const AccountGate(child: AgentCenterScreen()),
           ),
           GoRoute(
             path: '/agents/new',
-            builder: (context, state) =>
-                const AccountGate(child: NewAgentRunScreen()),
+            builder: (context, state) => AccountGate(
+              child: NewAgentRunScreen(
+                initialScope: state.uri.queryParameters['scope'],
+              ),
+            ),
           ),
           GoRoute(
             path: '/agents/:id',

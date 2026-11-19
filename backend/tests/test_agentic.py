@@ -147,6 +147,10 @@ def agent_api():
         for owner in owners:
             with owned_session(owner) as db:
                 for table in (
+                    "module_records",
+                    "module_operations",
+                    "vault_files",
+                    "knowledge_links",
                     "agent_runs",
                     "agent_usage",
                     "knowledge_sources",

@@ -1,3 +1,4 @@
+from app.modules import models as module_models  # noqa: F401
 from alembic import context
 from sqlalchemy import create_engine
 

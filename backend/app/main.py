@@ -1,3 +1,5 @@
+from app.modules.router import router as modules_router
+from app.modules.vault import router as vault_router, BodyLimit
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -33,6 +35,9 @@ app.add_middleware(
 app.include_router(life_router)
 app.include_router(assistant_router)
 app.include_router(agentic_router)
+app.include_router(modules_router)
+app.include_router(vault_router)
+app.add_middleware(BodyLimit)
 
 
 @app.exception_handler(AgentError)

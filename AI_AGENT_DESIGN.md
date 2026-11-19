@@ -84,3 +84,27 @@ actual results, and rejects unselected proposals. Rejection, cancellation, expir
 worker failure and stale previews do not apply proposals. Repeated decisions do
 not repeat writes. No external messaging, bookings, purchases or arbitrary code
 is available. Read-only chat and agent history remain distinct and deletable.
+
+
+## Phase 5 advanced specialists
+
+Finance, Learning, Career, Wellness, Travel, Vault metadata and Future specialists
+extend the existing supervisor, giving fourteen specialists total. Per-run scopes
+and per-record sharing bound read context (at most eight shared records, trimmed
+text). Finance advice is educational, wellness does not diagnose, career support
+uses supplied qualifications, and scenarios clearly state assumptions. The Vault
+specialist can read only opted-in metadata, never decrypt or inspect file bytes.
+
+Typed proposal tools prepare private transactions (internal ledger entries only),
+courses, study notes, flashcards, quizzes, resumes, routines, trips and scenarios.
+Approval previews show all fields and private sharing. Application-level validation,
+record limits and the existing atomic executor apply them; no external transaction
+or booking is supported. Shared module evidence carries revisions in attributed
+sources, so changed/unshared records block old approvals. Manual CRUD/reporting
+works without models. Knowledge Universe reuses authorized chunked RAG and adds
+user-managed graph edges; graph links alone do not authorize AI sharing.
+
+The Knowledge specialist also reads at most ten shared graph nodes and fifty
+connections among them. Connection changes invalidate affected source revisions
+and retrieval indexes so pending graph-based proposals become stale. Source
+registry limits fail closed instead of returning untracked evidence.

@@ -67,7 +67,7 @@ Generated Freezed/JSON files are included; CI regenerates them before checks.
 ## GitHub
 
 Phases 1 and 2 are pushed to milestone branches with successful Actions runs.
-Phase 3 is pushed at `100a7a1` on `codex/phase-3-core-life-management` with both Actions jobs green. Phase 4 is local on `codex/phase-4-agentic-ai`.
+Phase 3 is pushed at `100a7a1` on `codex/phase-3-core-life-management` with both Actions jobs green. Phase 4 is pushed at `716233f` with both Actions jobs green. Phase 5 is local on `codex/phase-5-advanced-modules`.
 CI runs backend/RLS tests and Flutter format/analyze/test/debug build when pushed.
 No cloud deployment or GitHub push is implied by a successful local check.
 
@@ -113,3 +113,40 @@ agent history and old content-free counters. Deleting a source clears its index;
 older chat/run excerpts are separate history and can be deleted by their owner.
 Live provider calls and Supabase account flows require actual configuration and
 have not been validated with credentials in this workspace.
+
+
+## Phase 5 advanced modules and encrypted vault
+
+Apply `alembic upgrade head` (revision `0004`). Manual records/reports, quizzes,
+resume review, graph links, planner links and scenario calculations need no AI
+provider. Advanced specialists use the existing worker/provider configuration and
+explicit record sharing. Each proposed record still requires preview approval.
+
+Vault upload/download requires a server-only 32-byte AES key, base64-encoded, in
+`VAULT_ENCRYPTION_KEYS`, and its ID in `VAULT_ACTIVE_KEY_ID`. For example, generate
+one locally with Python's `base64.b64encode(os.urandom(32)).decode()` and set:
+
+```dotenv
+VAULT_ENCRYPTION_KEYS={"v1":"YOUR_BASE64_32_BYTE_SECRET"}
+VAULT_ACTIVE_KEY_ID=v1
+```
+
+Keep keys outside Git/mobile config. Back up keys separately and restrict their
+access. To rotate, add a new key ID and make it active while retaining previous
+IDs for existing files. Removing a key makes files encrypted under it unreadable;
+there is no automatic re-encryption job in this phase. Missing/invalid keys show
+setup-required states, never plaintext storage. This is server-side encryption,
+not end-to-end encryption or a production security certification.
+
+PostgreSQL holds ciphertext with a 5 MiB/file and 100 MiB/user limit, suitable for
+the current bounded vault. Plan encrypted backups, restore testing, storage quotas,
+TLS/ingress rate limits and malware scanning before production expansion. Downloads
+are explicit user saves, never executed or auto-opened. Native file dialogs use
+pinned `file_picker` 10.3.10; Android compiled here, while iOS dialog/device behavior
+still requires Xcode and device verification. No broad storage permission is added.
+
+No banking/booking/health/job-discovery integration, live exchange feed, push alarm,
+OCR pipeline or biometric gate is configured. Bills/follow-ups/expiry dates and
+routines are saved records; users can explicitly add Planner tasks. Existing daily
+retention operations now include expired vault files. Live Supabase and model calls
+remain unverified until real credentials are supplied.

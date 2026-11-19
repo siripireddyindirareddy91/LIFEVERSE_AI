@@ -5,14 +5,43 @@ from uuid import UUID
 from pydantic import AwareDatetime, Field, model_validator
 from app.life.schemas import Input, Output, MemoryWrite, NamedWrite
 
-Scope = Literal["planner", "goals", "habits", "memory", "knowledge", "insights"]
-AgentName = Literal["assistant", "planner", "goals", "habits", "memory", "knowledge", "insights"]
+Scope = Literal[
+    "planner",
+    "goals",
+    "habits",
+    "memory",
+    "knowledge",
+    "insights",
+    "finance",
+    "learning",
+    "career",
+    "wellness",
+    "travel",
+    "vault",
+    "future",
+]
+AgentName = Literal[
+    "assistant",
+    "planner",
+    "goals",
+    "habits",
+    "memory",
+    "knowledge",
+    "insights",
+    "finance",
+    "learning",
+    "career",
+    "wellness",
+    "travel",
+    "vault",
+    "future",
+]
 
 
 class RunWrite(Input):
     request_id: UUID
     prompt: str = Field(min_length=1, max_length=4000)
-    scopes: list[Scope] = Field(default_factory=list, max_length=6)
+    scopes: list[Scope] = Field(default_factory=list, max_length=13)
     allow_proposals: bool = False
 
     @model_validator(mode="after")

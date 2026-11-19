@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/models/agent_models.dart';
@@ -58,6 +59,10 @@ class _KnowledgeState extends ConsumerState<KnowledgeScreen> {
       Text(
         'Knowledge, on your terms.',
         style: Theme.of(context).textTheme.displaySmall,
+      ),
+      TextButton(
+        onPressed: () => context.push('/knowledge-universe'),
+        child: const Text('Explore connected Knowledge Universe'),
       ),
       const SizedBox(height: 12),
       const Text(

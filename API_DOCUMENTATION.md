@@ -88,3 +88,67 @@ Detail contains field-by-field proposal previews and dependencies, actual execut
 results and attributed retrieval excerpts. Run deletion removes run content,
 proposals, decisions and steps, while content-free daily usage counts and applied
 life records remain. The Flutter history export copies this owner-only detail.
+
+
+## Phase 5 advanced modules
+
+These endpoints remain under `/api/v1`, require verified identity, and use owner
+RLS. The module catalog publishes each record's strict Pydantic JSON schema; the
+Flutter editor derives structured controls from these schemas. Unsupported fields,
+invalid decimals/dates and wrong parent kinds are rejected.
+
+| Operation | Endpoint |
+|---|---|
+| Module kinds and validated input schemas | GET `/modules/catalog` |
+| Actual-record overview, optional `month=YYYY-MM-DD` | GET `/modules/{module}/overview` |
+| Paginated records, filters `kind`, `parent_id`, `q` | GET `/modules/{module}/records` |
+| Create a typed record | POST `/modules/records/{kind}` |
+| Get / replace / delete record | GET, PUT, DELETE `/modules/record/{id}` |
+| Explicitly create a linked Planner task | POST `/modules/record/{id}/planner` |
+| Manual-rate conversion | POST `/finance/convert` |
+| Practice question / submit quiz answer | GET, POST `/learning/practice/{id}` |
+| Factual resume text and literal keyword review | GET `/career/resume/{id}` |
+| Deterministic scenario calculation | GET `/future/scenarios/{id}` |
+| Connected source graph, optional `q` | GET `/knowledge-universe/graph` |
+| Create/update relationship / delete it | POST `/knowledge-universe/links`, DELETE `/knowledge-universe/links/{id}` |
+| Attributed retrieval over shared content | POST `/knowledge-universe/search` |
+| Vault configuration/quota | GET `/vault/status` |
+| List / upload encrypted files | GET, POST `/vault/files` |
+| File metadata / edit metadata / delete | GET, PUT, DELETE `/vault/files/{id}` |
+| Authenticated, integrity-checked download | GET `/vault/files/{id}/download` |
+
+Modules: finance, learning, career, wellness, travel and future. Knowledge Universe
+reuses Phase 4 knowledge sources/retrieval. Vault has its own encrypted file API.
+Record kinds are listed in `/modules/catalog` (16 types). Input envelope:
+`request_id` UUID, `data` matching the kind schema, optional `parent_id`, and
+`allow_ai` false by default. PUT also requires the previous `revision`; an already
+applied identical replacement is retry-safe, while a different stale edit returns
+409. Creates use request identifiers to prevent retry duplicates. Parent validation
+and account limits are serialized; records are capped at 5000/account. A trip
+owns itinerary/packing children; an optional course owns study material. Deletion
+cascades children. Existing Planner tasks remain.
+
+Planner task creation accepts a UUID `request_id` and optional aware `due_at`.
+Retries return the same task; it does not activate a notification or recurrence.
+Quiz POST input is `answer: A|B|C|D`; output is actual correctness/score/explanation.
+Practice GET omits the answer key. Resume review compares supplied text literally;
+it is not an ATS percentage or job verification. Conversion uses the user's positive
+`rate` and `rate_date`, never an unstated live rate. Scenario outputs describe the
+user's assumptions and calculation method, with no guaranteed outcomes.
+
+Vault uploads use metadata plus `request_id`, `filename` and `content_base64`.
+Maximum decoded file 5 MiB, total storage 100 MiB/account; request buffers are
+bounded at 8 MiB for upload and 1 MiB elsewhere, including chunked requests. PDF,
+PNG, JPEG and UTF-8 TXT require matching signatures/text. Files use server-side
+AES-256-GCM, random nonces and owner/file-bound associated data. Downloads verify
+authentication tag, size and SHA-256, return base64, and set `Cache-Control: no-store`.
+File bytes never enter agent context. Metadata sharing is independently opt-in.
+Expired files are unavailable immediately and removed on access/daily maintenance.
+
+Knowledge links require two different owned, active sources. Graph returns at
+most 100 matching nodes and 300 edges among them; totals/limits are explicit.
+Changing a knowledge connection invalidates the affected source revisions/indexes,
+so graph-based approvals cannot silently use an old relationship. The Knowledge
+specialist can read up to ten shared graph nodes and fifty links among them.
+Search accepts `query` and `semantic` (default false) and requires AI/knowledge
+consent plus source sharing. Semantic mode calls the configured embedding provider.

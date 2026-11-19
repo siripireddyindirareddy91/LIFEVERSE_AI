@@ -25,7 +25,7 @@ from app.agentic.schemas import (
     RunRead,
     RunWrite,
 )
-from app.agentic.tools import AGENTS, TOOLS
+from app.agentic.tools import AGENTS, TOOLS, ADVANCED_WRITES
 from app.config import get_settings
 from app.life.models import Memory
 from app.life.router import DB, Limit, Offset, Search, User
@@ -82,7 +82,7 @@ def action_read(db, user, action):
         preview.append(
             {"name": "Due at", "before": display(before.get("due_at")), "after": "Not set"}
         )
-    if action.tool == "save_memory":
+    if action.tool == "save_memory" or action.tool in ADVANCED_WRITES:
         preview.append({"name": "AI sharing", "before": None, "after": "Off — saved privately"})
     return {
         "id": action.id,
@@ -366,7 +366,13 @@ def create_source(payload: KnowledgeWrite, user: User, db: DB):
 
 @router.put("/knowledge/{source_id}", response_model=KnowledgeRead)
 def edit_source(source_id: UUID, payload: KnowledgeWrite, user: User, db: DB):
-    source = get_owned(db, KnowledgeSource, source_id, user)
+    source = db.scalar(
+        select(KnowledgeSource)
+        .where(KnowledgeSource.user_id == user.id, KnowledgeSource.id == source_id)
+        .with_for_update()
+    )
+    if source is None:
+        raise HTTPException(404, "Source not found")
     update_record(source, payload)
     invalidate_source(db, user.id, "knowledge", source)
     db.flush()

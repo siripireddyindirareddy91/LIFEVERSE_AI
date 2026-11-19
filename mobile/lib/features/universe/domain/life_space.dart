@@ -85,8 +85,11 @@ enum LifeSpace {
   String get route => switch (this) {
     LifeSpace.life => '/planner',
     LifeSpace.goals => '/goals',
-    LifeSpace.wellness => '/habits',
-    LifeSpace.knowledge => '/memory',
-    _ => '/universe/$id',
+    LifeSpace.wellness => '/modules/wellness',
+    LifeSpace.knowledge => '/knowledge-universe',
+    LifeSpace.money => '/modules/finance',
+    LifeSpace.learning => '/modules/learning',
+    LifeSpace.career => '/modules/career',
+    LifeSpace.travel => '/modules/travel',
   };
 }

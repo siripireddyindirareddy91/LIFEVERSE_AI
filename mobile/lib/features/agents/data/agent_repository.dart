@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../../../core/models/agent_models.dart';
 import '../../../core/models/life_models.dart';
 import '../../../core/network/api_client.dart';
@@ -65,6 +66,18 @@ class AgentRepository {
 
   Future<Map<String, dynamic>> index(String kind, String id) =>
       _get('retrieval/$kind/$id/index', method: 'POST');
-  Future<Map<String, dynamic>> source(String kind, String id) =>
-      _get('${kind == 'memory' ? 'memories' : 'knowledge'}/$id');
+  Future<Map<String, dynamic>> source(String kind, String id) async {
+    if (kind == 'memory' || kind == 'knowledge') {
+      return _get('${kind == 'memory' ? 'memories' : 'knowledge'}/$id');
+    }
+    final value = await _get(
+      kind == 'vault' ? 'vault/files/$id' : 'modules/record/$id',
+    );
+    return {
+      'title': value['title'],
+      'content': const JsonEncoder.withIndent(
+        '  ',
+      ).convert(value['data'] ?? value),
+    };
+  }
 }

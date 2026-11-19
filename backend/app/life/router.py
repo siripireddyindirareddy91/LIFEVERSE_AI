@@ -346,7 +346,11 @@ def create_memory(payload: MemoryWrite, user: User, db: DB):
 @router.put("/memories/{record_id}", response_model=MemoryRead)
 def edit_memory(record_id: UUID, payload: MemoryWrite, user: User, db: DB):
     purge_expired(db, user)
-    row = get_owned(db, Memory, record_id, user)
+    row = db.scalar(
+        select(Memory).where(Memory.user_id == user.id, Memory.id == record_id).with_for_update()
+    )
+    if row is None:
+        raise HTTPException(404, "Memory not found")
     update_record(row, payload)
     invalidate_source(db, user.id, "memory", row)
     db.flush()

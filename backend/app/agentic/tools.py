@@ -1,3 +1,4 @@
+from app.modules.schemas import SCHEMAS as MODULE_SCHEMAS
 from dataclasses import dataclass
 from datetime import date
 from uuid import UUID, uuid4
@@ -162,6 +163,50 @@ AGENTS = {
 }
 
 
+ADVANCED_AGENTS = {
+    "finance": "Finance education and manual-record analysis",
+    "learning": "Learning tutor and study support",
+    "career": "Career and factual resume support",
+    "wellness": "Supportive routines, never diagnosis",
+    "travel": "Travel planning, never booking",
+    "vault": "Shared document metadata, never file contents",
+    "future": "Assumption-based scenario comparison",
+}
+AGENTS.update(ADVANCED_AGENTS)
+TOOLS["read_knowledge_connections"] = ToolSpec(
+    "read_knowledge_connections",
+    "Read connections among up to ten shared knowledge sources",
+    "knowledge",
+    "knowledge",
+    QueryArgs,
+)
+for _name, _label in ADVANCED_AGENTS.items():
+    TOOLS["read_" + _name] = ToolSpec("read_" + _name, _label, _name, _name, QueryArgs)
+
+# Domain schemas define the complete proposal; consent/AI-sharing cannot be model arguments.
+
+ADVANCED_WRITES = {
+    "create_entry": ("finance", "entry"),
+    "create_course": ("learning", "course"),
+    "create_study_note": ("learning", "study_note"),
+    "create_flashcard": ("learning", "flashcard"),
+    "create_quiz": ("learning", "quiz"),
+    "create_resume": ("career", "resume"),
+    "create_routine": ("wellness", "routine"),
+    "create_trip": ("travel", "trip"),
+    "create_scenario": ("future", "scenario"),
+}
+for _tool, (_agent, _kind) in ADVANCED_WRITES.items():
+    TOOLS[_tool] = ToolSpec(
+        _tool,
+        "Prepare a private " + _kind.replace("_", " "),
+        _agent,
+        _agent,
+        MODULE_SCHEMAS[_kind],
+        True,
+    )
+
+
 def permitted_tools(agent, scopes, allow_proposals):
     return [
         spec
@@ -198,6 +243,14 @@ def snapshot(db, user_id, tool, record_id):
 
 def read_tool(db, user_id, spec, args, embedder=None):
     user = identity(user_id)
+    if spec.name == "read_knowledge_connections":
+        from app.modules.agent_context import knowledge_connections
+
+        return knowledge_connections(db, user, args.query)
+    if spec.agent in ADVANCED_AGENTS:
+        from app.modules.agent_context import context
+
+        return context(db, user, spec.agent, args.query)
     if spec.name == "read_dashboard":
         return dashboard(user, db)
     if spec.name in {"search_memories", "search_knowledge"}:
@@ -359,6 +412,23 @@ def execute(db, user_id, action):
         raise AgentError("tool_denied", "This action is not executable.")
     args = spec.args.model_validate(action.arguments)
     user = identity(user_id)
+    if action.tool in ADVANCED_WRITES:
+        from app.modules.service import save_record
+        from app.modules.schemas import RecordWrite
+
+        save_record(
+            db,
+            user,
+            ADVANCED_WRITES[action.tool][1],
+            RecordWrite(request_id=action.id, data=args.model_dump(mode="json"), allow_ai=False),
+            record_id=action.record_id,
+        )
+        return {
+            "record_id": str(action.record_id),
+            "tool": action.tool,
+            "applied": True,
+            "applied_at": now().isoformat(),
+        }
     if action.tool == "create_task":
         row = Task(id=action.record_id, user_id=user_id)
         set_task(row, args, user, db)

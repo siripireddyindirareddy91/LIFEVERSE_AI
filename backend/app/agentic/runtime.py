@@ -151,7 +151,10 @@ class AgentRuntime:
                         )
                         if found is None:
                             if len(existing) >= 12:
-                                continue
+                                raise AgentError(
+                                    "source_budget",
+                                    "This run reached its source limit. Narrow the request.",
+                                )
                             found = {**source, "label": f"S{len(existing) + 1}"}
                             existing.append(found)
                         returned.append(found)

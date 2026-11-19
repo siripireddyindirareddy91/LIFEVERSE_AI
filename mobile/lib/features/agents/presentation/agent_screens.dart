@@ -1,3 +1,4 @@
+import '../../modules/application/module_providers.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -20,6 +21,13 @@ const scopes = {
   'memory': 'Personal Memory',
   'knowledge': 'Knowledge',
   'insights': 'Life Intelligence',
+  'finance': 'Finance',
+  'learning': 'Learning',
+  'career': 'Career',
+  'wellness': 'Wellness',
+  'travel': 'Travel',
+  'vault': 'Vault metadata',
+  'future': 'Future Studio',
 };
 String statusLabel(String status) => status.replaceAll('_', ' ');
 
@@ -162,14 +170,17 @@ class _AgentCenterState extends ConsumerState<AgentCenterScreen> {
 }
 
 class NewAgentRunScreen extends ConsumerStatefulWidget {
-  const NewAgentRunScreen({super.key});
+  const NewAgentRunScreen({this.initialScope, super.key});
+  final String? initialScope;
   @override
   ConsumerState<NewAgentRunScreen> createState() => _NewRunState();
 }
 
 class _NewRunState extends ConsumerState<NewAgentRunScreen> {
   final prompt = TextEditingController();
-  final selected = <String>{};
+  late final selected = <String>{
+    if (scopes.containsKey(widget.initialScope)) widget.initialScope!,
+  };
   bool proposals = false, busy = false;
   String? error, fingerprint, requestId;
   @override
@@ -350,6 +361,8 @@ class _RunState extends ConsumerState<AgentRunScreen> {
       ref.invalidate(agentRunProvider(run.id));
       ref.invalidate(agentRunsProvider);
       if (result.status == 'completed') {
+        ref.invalidate(moduleRecordsProvider);
+        ref.invalidate(moduleReportProvider);
         ref.invalidate(tasksProvider);
         ref.invalidate(goalsProvider);
         ref.invalidate(habitsProvider);

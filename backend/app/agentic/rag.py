@@ -83,6 +83,25 @@ def ensure_chunks(db, user_id, kind, source):
 
 
 def source_snapshot(db, user_id, kind, source_id, lock=False):
+    if kind in {"finance", "learning", "career", "wellness", "travel", "future", "vault"}:
+        from app.modules.models import ModuleRecord, VaultFile
+        from app.modules.service import module_kinds
+
+        model = VaultFile if kind == "vault" else ModuleRecord
+        conditions = [model.id == source_id, model.user_id == user_id, model.allow_ai.is_(True)]
+        if kind == "vault":
+            conditions.append(or_(VaultFile.expires_at.is_(None), VaultFile.expires_at > now()))
+        else:
+            conditions.append(ModuleRecord.kind.in_(module_kinds(kind)))
+        query = select(model).where(*conditions).execution_options(populate_existing=True)
+        if lock:
+            query = query.with_for_update()
+        source = db.scalar(query)
+        if source is None:
+            raise AgentError(
+                "stale_source", "A shared module record changed or is unavailable. Make a new plan."
+            )
+        return source
     model = source_model(kind)
     query = select(model).where(
         model.id == source_id, model.user_id == user_id, *active_source(model)

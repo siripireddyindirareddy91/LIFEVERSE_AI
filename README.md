@@ -4,7 +4,7 @@
 
 Android/iOS application built with Flutter and Dart, FastAPI, PostgreSQL and
 Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundation;
-Phase 3 adds connected core life management; Phase 4 adds supervised agent workflows.
+Phase 3 adds connected core life management; Phase 4 adds supervised agent workflows; Phase 5 adds advanced life modules.
 
 ## Included
 
@@ -29,6 +29,12 @@ Phase 3 adds connected core life management; Phase 4 adds supervised agent workf
 - Durable agent queue, exact-preview approvals and execution history.
 - User-controlled knowledge sources, keyword RAG and optional real embeddings.
 
+- Manual finance, budgets, savings and bills with currency-separated reports.
+- Learning paths/notes/flashcards/quizzes, career applications/resumes and wellness logs.
+- Encrypted Life Vault uploads/downloads, trips/itineraries/packing and planner links.
+- Connected Knowledge Universe and assumption-based Future Studio comparisons.
+- Advanced specialists with explicit record sharing and approved private-record proposals.
+
 ## Start locally
 
 1. Copy `.env.example` to `.env`.
@@ -52,5 +58,7 @@ Phase 3: [scope](docs/PHASE_3_PLAN.md), [verification](docs/PHASE_3_VERIFICATION
 and [AI design](AI_AGENT_DESIGN.md).
 
 Phase 4: [scope](docs/PHASE_4_PLAN.md), [verification](docs/PHASE_4_VERIFICATION.md).
-Phases 1-3 are pushed on milestone branches with green Actions. Phase 4 is local
-on `codex/phase-4-agentic-ai`; live Supabase and AI credentials remain unconfigured.
+Phases 1-4 are pushed on milestone branches with green Actions. Phase 5 is local
+on `codex/phase-5-advanced-modules`. Live Supabase/AI credentials and a vault
+encryption key remain unconfigured.
+Phase 5: [scope](docs/PHASE_5_PLAN.md), [verification](docs/PHASE_5_VERIFICATION.md).

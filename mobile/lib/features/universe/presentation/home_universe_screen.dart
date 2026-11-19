@@ -181,11 +181,26 @@ class ExploreUniverseScreen extends StatelessWidget {
         ),
         const SizedBox(height: Space.md),
         const Text(
-          'Your planner, goals, daily habits and personal memory are ready to connect to your account. Other spaces show what is planned.',
+          'Your life spaces connect to your saved records. Sign in to manage your plans, learning, money and more.',
         ),
         const SizedBox(height: Space.xl),
         for (final space in LifeSpace.values)
           SpaceListTile(space: space, onTap: () => context.push(space.route)),
+        ListTile(
+          leading: const Icon(Icons.shield_outlined),
+          title: const Text('Life Vault'),
+          onTap: () => context.push('/vault'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.auto_graph),
+          title: const Text('Future Studio'),
+          onTap: () => context.push('/modules/future'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.psychology_outlined),
+          title: const Text('Personal Memory'),
+          onTap: () => context.push('/memory'),
+        ),
       ],
     ),
   );
