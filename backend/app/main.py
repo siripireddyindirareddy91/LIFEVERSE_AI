@@ -1,3 +1,5 @@
+from app.automation.router import router as automation_router
+from app.automation import signals  # noqa: F401 - transactional app-event outbox
 from app.modules.router import router as modules_router
 from app.modules.vault import router as vault_router, BodyLimit
 from contextlib import asynccontextmanager
@@ -37,6 +39,7 @@ app.include_router(assistant_router)
 app.include_router(agentic_router)
 app.include_router(modules_router)
 app.include_router(vault_router)
+app.include_router(automation_router)
 app.add_middleware(BodyLimit)
 
 

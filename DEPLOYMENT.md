@@ -150,3 +150,45 @@ OCR pipeline or biometric gate is configured. Bills/follow-ups/expiry dates and
 routines are saved records; users can explicitly add Planner tasks. Existing daily
 retention operations now include expired vault files. Live Supabase and model calls
 remain unverified until real credentials are supplied.
+
+## Phase 6 workers, calendars and notifications
+
+Apply migration `0005` with migration credentials. Run the API plus
+`python -m app.automation.worker` using restricted runtime/dispatcher URLs.
+Compose includes this service and waits for API health. Read-only AI workflow
+steps additionally need `python -m app.agentic.worker` and configured AI services.
+Monitor `/api/v1/automation/status`; a heartbeat older than 60 seconds is offline.
+Run trusted `python -m app.maintenance` daily with the operations role.
+
+Register Google and/or Microsoft OAuth clients with exact HTTPS redirects:
+`{OAUTH_PUBLIC_BASE_URL}/api/v1/integrations/oauth/google/callback` and
+`{OAUTH_PUBLIC_BASE_URL}/api/v1/integrations/oauth/microsoft/callback`.
+Set the corresponding server-only client ID/secret in `.env`; enable Google
+Calendar API and the required Microsoft delegated calendar permissions.
+Use the existing `VAULT_ENCRYPTION_KEYS`/`VAULT_ACTIVE_KEY_ID` AES-256 keyring;
+preserve old keys during rotation. OAuth state and tokens use separate authenticated
+encryption contexts. No secret belongs in Flutter configuration.
+
+Connections request read access by default. Users explicitly select write access
+before connecting and approve each export. Only primary/default calendars are
+supported: sync reads the past 30 and next 90 days, at most 500 events. Imports
+require a click and do not track subsequent remote changes automatically. Exports
+contain no attendees/invitations. Disconnect wipes locally stored tokens and
+mirrors; users can also revoke the application grant in the provider account.
+Disable/redact OAuth callback query strings in reverse-proxy logs. The API removes
+callback queries before access logging; Compose disables Uvicorn access logs.
+
+`EXTERNAL_APIS_ENABLED=false` is the default. Enable only after reviewing
+[Open-Meteo terms](https://open-meteo.com/en/terms) and
+[Frankfurter documentation](https://frankfurter.dev/). The app supplies attribution;
+weather coordinates and currency codes are sent only to these fixed providers.
+Reference rates are not executable exchange quotes.
+
+Native local notifications require explicit device opt-in. Android includes the
+notification permission, boot receivers and desugaring; delivery uses inexact
+alarms. iOS permission/delegate setup is included but requires macOS/device
+validation. At most 50 pending alerts synchronize while the app is open. Device
+previews are generic, and account changes clear local alerts and delivery state.
+FCM/APNs remote push is not configured; a closed app cannot refresh its queue from
+new server changes. Validate OAuth, notification permissions and reboot delivery
+on real devices before release.

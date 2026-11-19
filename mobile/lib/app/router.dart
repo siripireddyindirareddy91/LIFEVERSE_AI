@@ -1,3 +1,7 @@
+import '../features/automation/presentation/automation_screen.dart';
+import '../features/automation/presentation/workflow_builder.dart';
+import '../features/automation/presentation/notifications_screen.dart';
+import '../features/automation/presentation/integrations_screen.dart';
 import '../features/modules/presentation/module_screen.dart';
 import '../features/modules/presentation/vault_screen.dart';
 import '../features/modules/presentation/knowledge_universe_screen.dart';
@@ -31,6 +35,47 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) =>
             FoundationShell(location: state.uri.path, child: child),
         routes: [
+          GoRoute(
+            path: '/automation',
+            builder: (context, state) =>
+                const AccountGate(child: AutomationScreen()),
+          ),
+          GoRoute(
+            path: '/automation/new',
+            builder: (context, state) => AccountGate(
+              child: WorkflowBuilderScreen(
+                template: int.tryParse(
+                  state.uri.queryParameters['template'] ?? '',
+                ),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: '/automation/workflows/:id',
+            builder: (context, state) => AccountGate(
+              child: WorkflowBuilderScreen(
+                key: ValueKey(state.pathParameters['id']),
+                id: state.pathParameters['id'],
+              ),
+            ),
+          ),
+          GoRoute(
+            path: '/automation/runs/:id',
+            builder: (context, state) => AccountGate(
+              child: WorkflowRunScreen(id: state.pathParameters['id']!),
+            ),
+          ),
+          GoRoute(
+            path: '/notifications',
+            builder: (context, state) =>
+                const AccountGate(child: NotificationsScreen()),
+          ),
+          GoRoute(
+            path: '/integrations',
+            builder: (context, state) =>
+                const AccountGate(child: IntegrationsScreen()),
+          ),
+
           GoRoute(
             path: '/modules/:module',
             builder: (context, state) {
@@ -214,6 +259,11 @@ class FoundationShell extends StatelessWidget {
             title: const BrandLockup(),
             toolbarHeight: 72,
             actions: [
+              IconButton(
+                tooltip: 'Notifications',
+                onPressed: () => context.push('/notifications'),
+                icon: const Icon(Icons.notifications_outlined),
+              ),
               IconButton(
                 tooltip: 'Agent center',
                 onPressed: () => context.push('/agents'),

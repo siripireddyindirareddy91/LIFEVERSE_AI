@@ -30,6 +30,7 @@ class AgentRun(Owned, Base):
         ),
     )
     request_id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True))
+    origin: Mapped[str] = mapped_column(String(16), default="ai", server_default="ai")
     input_hash: Mapped[str] = mapped_column(String(64))
     prompt: Mapped[str] = mapped_column(Text)
     scopes: Mapped[list[str]] = mapped_column(ARRAY(String(20)), default=list)

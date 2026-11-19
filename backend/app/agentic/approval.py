@@ -90,7 +90,31 @@ def decide(db, run, payload):
         # All selected writes and their applied metadata form one transaction.
         # A failed check/write rolls the entire batch back to this savepoint.
         with db.begin_nested():
-            check_consent(db, run.user_id, run.scopes, lock=True)
+            if run.origin == "workflow":
+                from app.automation.models import Workflow, WorkflowRun
+
+                linked = db.scalar(
+                    select(WorkflowRun)
+                    .join(
+                        Workflow,
+                        (Workflow.user_id == WorkflowRun.user_id)
+                        & (Workflow.id == WorkflowRun.workflow_id),
+                    )
+                    .where(
+                        WorkflowRun.user_id == run.user_id,
+                        WorkflowRun.proposal_run_id == run.id,
+                        Workflow.enabled.is_(True),
+                        Workflow.revision == WorkflowRun.revision,
+                        WorkflowRun.status == "waiting_approval",
+                    )
+                )
+                if linked is None:
+                    raise AgentError(
+                        "workflow_stopped",
+                        "The owning workflow stopped or changed. No changes were applied.",
+                    )
+            else:
+                check_consent(db, run.user_id, run.scopes, lock=True)
             for source in run.sources:
                 current = source_snapshot(
                     db, run.user_id, source["kind"], UUID(source["source_id"]), lock=True

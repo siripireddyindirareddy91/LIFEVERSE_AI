@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     agent_approval_minutes: int = Field(default=60, ge=5, le=1440)
     agent_history_days: int = Field(default=30, ge=1, le=30)
     vault_encryption_keys: dict[str, SecretStr] = {}
+    oauth_public_base_url: str = ""
+    google_client_id: str = ""
+    google_client_secret: SecretStr = SecretStr("")
+    microsoft_client_id: str = ""
+    microsoft_client_secret: SecretStr = SecretStr("")
+    external_apis_enabled: bool = False
+    workflow_runs_per_day: int = Field(default=40, ge=1, le=100)
     vault_active_key_id: str = Field(default="v1", min_length=1, max_length=40)
     ai_embedding_model: str = Field(default="", max_length=120)
     ai_embedding_dimensions: int = Field(default=1536, ge=64, le=3072)

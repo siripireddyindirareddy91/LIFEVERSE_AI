@@ -92,3 +92,24 @@ AI context fetches at most eight explicitly shared records. Revision/source chec
 prevent approval based on edited, deleted or unshared evidence. Approved generated
 records start private. Daily retention now also removes expired encrypted files.
 Rollback of `0004` destroys Phase 5 records/files/links; test only on disposable data.
+
+## Phase 6 migration 0005
+
+Adds `workflows`, `workflow_usage`, `workflow_runs`, `automation_jobs`,
+`automation_workers`, `automation_signals`, `inbox_notifications`,
+`calendar_connections`, `oauth_states`, `oauth_lookups`, `calendar_mirrors`, and
+`calendar_operations`; also adds server-controlled `agent_runs.origin`.
+Owner tables use forced RLS and composite owner references. The global worker
+heartbeat contains metadata only. OAuth lookup exposes only a hashed state's
+owner/expiry to the dispatcher, never credentials or private workflow content.
+Dispatcher job updates are limited to lease/status columns.
+
+New task/goal/module records enqueue a content-free signal transactionally.
+Workers claim with SKIP LOCKED and 120-second leases, validate attempt generations,
+and take owner locks before record locks. Immutable workflow snapshots and stable
+request IDs prevent silent definition drift and duplicate execution. Content-free
+usage survives run-history deletion for daily quota enforcement and expires after
+two days. Run/inbox history and completed jobs/signals expire after 30 days;
+future reminder retention extends 30 days beyond delivery time. OAuth state is
+short-lived and its verifier is erased after consumption. Calendar operation
+history and old ended mirrors are cleared after 30 days by trusted maintenance.

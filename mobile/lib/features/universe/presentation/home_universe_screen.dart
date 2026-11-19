@@ -184,6 +184,11 @@ class ExploreUniverseScreen extends StatelessWidget {
           'Your life spaces connect to your saved records. Sign in to manage your plans, learning, money and more.',
         ),
         const SizedBox(height: Space.xl),
+        ListTile(
+          leading: const Icon(Icons.account_tree_outlined),
+          title: const Text('Automation center'),
+          onTap: () => context.push('/automation'),
+        ),
         for (final space in LifeSpace.values)
           SpaceListTile(space: space, onTap: () => context.push(space.route)),
         ListTile(

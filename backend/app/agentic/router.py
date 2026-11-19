@@ -300,6 +300,9 @@ def get_run(run_id: UUID, user: User, db: DB):
 
 @router.post("/agents/runs/{run_id}/decision", response_model=RunDetail)
 def decision(run_id: UUID, payload: DecisionWrite, user: User, db: DB):
+    from app.modules.service import lock_owner
+
+    lock_owner(db, user)
     run = db.scalar(
         select(AgentRun).where(AgentRun.user_id == user.id, AgentRun.id == run_id).with_for_update()
     )

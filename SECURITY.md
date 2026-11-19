@@ -62,3 +62,26 @@ inputs. Scenario rates/hours are user assumptions. Resume keyword checks are
 literal comparisons, not an ATS certification. No job, qualification, price or
 medical conclusion is represented as verified external evidence. Production
 configuration, physical-device testing and security audit remain outstanding.
+
+## Phase 6 execution boundaries
+
+Workflow activation approves the exact definition and declared permissions.
+Deterministic rule actions do not require AI processing consent, but every write
+still requires an exact-preview approval through the existing approval engine.
+The server-only workflow origin is accepted only with an active linked workflow
+run and unchanged definition revision. Clients cannot set this origin. AI steps
+remain read-only, queued through LangGraph, and require fresh consent and scoped
+source access. Private report output is not automatically supplied to an AI step.
+
+OAuth uses hashed random state, PKCE S256, one-time expiry and encrypted verifier/
+refresh credentials. Fixed HTTPS origins, no redirects, response-size/time limits
+and Microsoft pagination host/path validation prevent arbitrary connector access.
+Tokens and callback query strings are excluded from API responses/access logs.
+Local disconnect clears credentials; provider-side grant revocation is separate.
+
+Calendar write approval binds payload, nonce, expiry and connection revision.
+Publication locks/rechecks the local event. Google uses a deterministic remote ID
+and reconciliation marker; Microsoft uses transactionId. Unknown write outcomes
+require explicit reconciliation. Leases and generation fencing prevent a stale
+worker from committing a reclaimed job. Notification dismissal erases content,
+and generic device previews avoid exposing private reports on the lock screen.

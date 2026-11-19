@@ -108,3 +108,19 @@ The Knowledge specialist also reads at most ten shared graph nodes and fifty
 connections among them. Connection changes invalidate affected source revisions
 and retrieval indexes so pending graph-based proposals become stale. Source
 registry limits fail closed instead of returning untracked evidence.
+
+## Phase 6 workflows
+
+The visual builder produces a validated sequence rather than executable code.
+Read-only AI nodes queue real existing LangGraph runs with proposals disabled;
+completion is consumed only after consent is rechecked. The automation worker
+waits between steps and does not simulate model results. It does not interpolate
+model output into an action payload or send previous private reports to a model.
+
+Structured task/event nodes stage deterministic proposals with a server-controlled
+workflow origin. The existing digest/nonce approval engine performs the actual
+write atomically, then the workflow resumes downstream notification/output steps.
+Rule-only workflows work without AI consent. Their linked workflow, active state
+and definition revision are still verified before approval. Pause/edit cancels
+unfinished runs and their pending proposals. Workflow history links to AI and
+approval histories for inspection.

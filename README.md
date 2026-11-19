@@ -58,7 +58,12 @@ Phase 3: [scope](docs/PHASE_3_PLAN.md), [verification](docs/PHASE_3_VERIFICATION
 and [AI design](AI_AGENT_DESIGN.md).
 
 Phase 4: [scope](docs/PHASE_4_PLAN.md), [verification](docs/PHASE_4_VERIFICATION.md).
-Phases 1-4 are pushed on milestone branches with green Actions. Phase 5 is local
-on `codex/phase-5-advanced-modules`. Live Supabase/AI credentials and a vault
-encryption key remain unconfigured.
+Phases 1-5 are pushed on milestone branches with green Actions. Phase 6 is local
+on `codex/phase-6-automation-integrations`. Live Supabase/AI credentials, calendar
+OAuth clients and a vault encryption key remain unconfigured.
 Phase 5: [scope](docs/PHASE_5_PLAN.md), [verification](docs/PHASE_5_VERIFICATION.md).
+Phase 6: [scope](docs/PHASE_6_PLAN.md), [verification](docs/PHASE_6_VERIFICATION.md).
+
+Phase 6 adds a visual workflow builder, durable execution and monitoring,
+Google/Microsoft calendar connections, an inbox with opt-in device reminders,
+and fixed-provider weather/reference-rate reads. Writes require exact approval.

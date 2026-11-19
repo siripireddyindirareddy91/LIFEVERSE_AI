@@ -1,3 +1,6 @@
+import 'package:lifeverse_ai/features/automation/data/automation_repository.dart';
+import 'package:lifeverse_ai/features/automation/application/automation_providers.dart';
+import 'package:lifeverse_ai/features/automation/data/device_gateway.dart';
 import 'package:lifeverse_ai/features/modules/data/module_repository.dart';
 import 'package:lifeverse_ai/features/modules/application/module_providers.dart';
 import 'package:lifeverse_ai/features/modules/data/vault_file_gateway.dart';
@@ -28,7 +31,13 @@ Future<void> mountCore(
   AgentRepository? agents,
   ModuleRepository? modules,
   VaultFileGateway? files,
+  AutomationRepository? automation,
+  DeviceGateway? device,
 }) async {
+  addTearDown(() async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+  });
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.textScaleFactorTestValue = scale;
@@ -46,6 +55,9 @@ Future<void> mountCore(
         configProvider.overrideWithValue(const AppConfig()),
         preferencesProvider.overrideWithValue(preferences),
         lifeRepositoryProvider.overrideWithValue(repo),
+        if (automation != null)
+          automationRepositoryProvider.overrideWithValue(automation),
+        if (device != null) deviceGatewayProvider.overrideWithValue(device),
         if (modules != null)
           moduleRepositoryProvider.overrideWithValue(modules),
         if (files != null) vaultFileGatewayProvider.overrideWithValue(files),

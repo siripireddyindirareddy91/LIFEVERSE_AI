@@ -67,6 +67,16 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: Space.lg),
+        ListTile(
+          leading: const Icon(Icons.account_tree_outlined),
+          title: const Text('Automation center'),
+          onTap: () => context.push('/automation'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.cable_outlined),
+          title: const Text('Integrations'),
+          onTap: () => context.push('/integrations'),
+        ),
         SwitchListTile.adaptive(
           title: const Text('Reduce motion'),
           subtitle: const Text(

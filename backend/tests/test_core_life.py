@@ -53,6 +53,17 @@ def api():
         for owner in actors:
             conn.execute(text("SELECT set_config('app.user_id', :id, true)"), {"id": str(owner)})
             for table in (
+                "workflow_runs",
+                "workflows",
+                "workflow_usage",
+                "automation_jobs",
+                "automation_signals",
+                "inbox_notifications",
+                "calendar_operations",
+                "calendar_mirrors",
+                "calendar_connections",
+                "oauth_states",
+                "oauth_lookups",
                 "messages",
                 "conversations",
                 "habit_checkins",

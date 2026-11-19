@@ -279,4 +279,11 @@ class BodyLimit:
                 return {"type": "http.request", "body": bytes(body), "more_body": False}
             return await receive()
 
-        await self.app(scope, replay, send)
+        async def safe_send(message):
+            if message["type"] == "http.response.start" and scope["path"].startswith(
+                "/api/v1/integrations/oauth/"
+            ):
+                scope["query_string"] = b""
+            await send(message)
+
+        await self.app(scope, replay, safe_send)

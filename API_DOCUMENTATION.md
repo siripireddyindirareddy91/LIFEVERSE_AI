@@ -152,3 +152,37 @@ so graph-based approvals cannot silently use an old relationship. The Knowledge
 specialist can read up to ten shared graph nodes and fifty links among them.
 Search accepts `query` and `semantic` (default false) and requires AI/knowledge
 consent plus source sharing. Semantic mode calls the configured embedding provider.
+
+## Phase 6 automation and integrations
+
+All routes below are prefixed `/api/v1` and require verified owner identity,
+except the single-use OAuth callback. Lists use bounded limit/offset pagination.
+OpenAPI supplies the strict discriminated node schemas; unknown input fields fail.
+
+| Routes | Behavior |
+|---|---|
+| `/automation/status`, `/automation/templates` | Worker freshness, limits, schema and starter definitions |
+| `/automation/workflows` GET/POST; `/{id}` GET/PUT/DELETE | Owner-only drafts; stable request UUID and revision checks |
+| `/automation/workflows/{id}/activate`, `/pause`, `/run` POST | Exact revision/digest activation; pause cancels pending work; run requires request UUID |
+| `/automation/runs` GET; `/{id}` GET/DELETE; `/{id}/cancel`, `/retry` POST | Snapshot and step history, bounded retries and terminal deletion |
+| `/notifications` GET/POST; `/{id}/read` POST; `/{id}` DELETE | Inbox, future reminder, read and dismissal |
+| `/integrations/status` GET; `/integrations/external/read` POST | Configuration availability and fixed weather/reference-rate requests |
+| `/integrations/oauth/{provider}/start` POST; `/callback` GET | Google/Microsoft browser authorization, read-only by default |
+| `/integrations/calendars` GET; `/{id}` DELETE; `/{id}/sync` POST; `/{id}/events` GET | Connections, local disconnect, bounded remote mirrors |
+| `/integrations/events/{id}/import` POST | Explicit local import with overlap confirmation |
+| `/integrations/calendars/{id}/exports` POST | Prepare exact local-event export preview |
+| `/integrations/exports` GET; `/{id}/decision` POST | Digest/nonce approval, rejection and explicit uncertain-operation retry |
+
+Workflows contain 2–12 ordered nodes with one trigger first and output last.
+Task/event actions must precede a mandatory approval checkpoint; later nodes cannot
+add writes. AI nodes are read-only and require current processing consent. Editing
+pauses the workflow. Schedule times use IANA zones, skip nonexistent DST times,
+and select the first occurrence of repeated times. Requests and runs are bounded;
+default run allowance is 40/day and survives history deletion. Approval expires
+in one hour. Active runs time out after 24 hours; history expires after 30 days.
+
+Calendar credentials never appear in responses. Imports are explicit snapshots.
+Exports recheck connection revision and local-event contents before publication.
+An uncertain provider response is shown for explicit reconciliation, never silently
+retried as a new event. Notifications show generic device lock-screen text;
+dismissal erases content while retaining a deduplication tombstone.

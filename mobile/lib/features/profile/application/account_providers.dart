@@ -1,3 +1,4 @@
+import '../../automation/data/device_gateway.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../app/providers.dart';
@@ -59,6 +60,13 @@ class AccountController extends Notifier<AsyncValue<void>> {
   Future<void> signOut() async {
     state = const AsyncLoading();
     try {
+      if (ref.read(preferencesProvider).getBool('notification_enabled') ==
+          true) {
+        await ref
+            .read(preferencesProvider)
+            .setBool('notification_enabled', false);
+        await ref.read(deviceGatewayProvider).clear();
+      }
       await ref.read(authProvider)?.auth.signOut();
       state = const AsyncData(null);
     } catch (error, stack) {

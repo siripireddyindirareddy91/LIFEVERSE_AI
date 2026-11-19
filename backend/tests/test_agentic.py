@@ -147,6 +147,17 @@ def agent_api():
         for owner in owners:
             with owned_session(owner) as db:
                 for table in (
+                    "workflow_runs",
+                    "workflows",
+                    "workflow_usage",
+                    "automation_jobs",
+                    "automation_signals",
+                    "inbox_notifications",
+                    "calendar_operations",
+                    "calendar_mirrors",
+                    "calendar_connections",
+                    "oauth_states",
+                    "oauth_lookups",
                     "module_records",
                     "module_operations",
                     "vault_files",
