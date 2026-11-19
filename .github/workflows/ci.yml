@@ -1,0 +1,61 @@
+name: Foundation checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.5-alpine
+        env:
+          POSTGRES_USER: lifeverse
+          POSTGRES_PASSWORD: lifeverse_local
+          POSTGRES_DB: lifeverse
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lifeverse -d lifeverse"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r backend/requirements.lock
+      - run: pip install --no-deps -e ./backend
+      - name: Provision restricted database role
+        env:
+          PGPASSWORD: lifeverse_local
+        run: psql -h localhost -U lifeverse -d lifeverse -v ON_ERROR_STOP=1 -f infrastructure/init-db.sql
+      - run: alembic upgrade head
+        working-directory: backend
+      - run: ruff check backend
+      - run: ruff format --check backend
+      - run: pytest backend/tests -q
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://lifeverse_app:lifeverse_app_local@localhost:5432/lifeverse
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.3"
+          channel: stable
+          cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - run: flutter pub get --enforce-lockfile
+        working-directory: mobile
+      - run: dart format --output=none --set-exit-if-changed lib test
+        working-directory: mobile
+      - run: flutter analyze
+        working-directory: mobile
+      - run: flutter test
+        working-directory: mobile
+      - run: flutter build apk --debug
+        working-directory: mobile

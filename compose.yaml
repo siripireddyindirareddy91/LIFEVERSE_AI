@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:17.5-alpine
+    environment:
+      POSTGRES_DB: lifeverse
+      POSTGRES_USER: lifeverse
+      POSTGRES_PASSWORD: lifeverse_local
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/init-db.sql:/docker-entrypoint-initdb.d/01-roles.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeverse -d lifeverse"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  api:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://lifeverse:lifeverse_local@db:5432/lifeverse
+      RUNTIME_DATABASE_URL: postgresql+psycopg://lifeverse_app:lifeverse_app_local@db:5432/lifeverse
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+volumes:
+  postgres_data:
