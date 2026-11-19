@@ -1,3 +1,5 @@
+import '../features/agents/presentation/agent_screens.dart';
+import '../features/agents/presentation/knowledge_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +27,27 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) =>
             FoundationShell(location: state.uri.path, child: child),
         routes: [
+          GoRoute(
+            path: '/agents',
+            builder: (context, state) =>
+                const AccountGate(child: AgentCenterScreen()),
+          ),
+          GoRoute(
+            path: '/agents/new',
+            builder: (context, state) =>
+                const AccountGate(child: NewAgentRunScreen()),
+          ),
+          GoRoute(
+            path: '/agents/:id',
+            builder: (context, state) => AccountGate(
+              child: AgentRunScreen(id: state.pathParameters['id']!),
+            ),
+          ),
+          GoRoute(
+            path: '/knowledge',
+            builder: (context, state) =>
+                const AccountGate(child: KnowledgeScreen()),
+          ),
           GoRoute(
             path: '/profile',
             builder: (context, state) =>
@@ -160,6 +183,11 @@ class FoundationShell extends StatelessWidget {
             title: const BrandLockup(),
             toolbarHeight: 72,
             actions: [
+              IconButton(
+                tooltip: 'Agent center',
+                onPressed: () => context.push('/agents'),
+                icon: const Icon(Icons.auto_awesome_outlined),
+              ),
               IconButton(
                 tooltip: 'Explore spaces',
                 onPressed: () => context.go('/explore'),

@@ -1,3 +1,4 @@
+import '../../agents/application/agent_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/models/life_models.dart';
@@ -43,6 +44,7 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
   );
   late bool _ai = widget.initial?.aiConsent ?? false;
   late bool _memory = widget.initial?.memoryConsent ?? false;
+  late bool _knowledge = widget.initial?.knowledgeConsent ?? false;
   bool _saving = false;
   String? _error;
   @override
@@ -98,14 +100,17 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
                     contentPadding: EdgeInsets.zero,
                     title: const Text('Allow AI processing'),
                     subtitle: const Text(
-                      'Send messages, recent chat and context you choose to the configured AI provider. Suggestions do not change your records.',
+                      'Send messages, recent chat and context you choose to the configured AI provider. Agent changes require your separate approval.',
                     ),
                     value: _ai,
                     onChanged: _saving
                         ? null
                         : (value) => setState(() {
                             _ai = value;
-                            if (!value) _memory = false;
+                            if (!value) {
+                              _memory = false;
+                              _knowledge = false;
+                            }
                           }),
                   ),
                   SwitchListTile.adaptive(
@@ -118,6 +123,17 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
                     onChanged: !_ai || _saving
                         ? null
                         : (value) => setState(() => _memory = value),
+                  ),
+                  SwitchListTile.adaptive(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Allow knowledge context'),
+                    subtitle: const Text(
+                      'Allow shared knowledge sources to be indexed and retrieved by agents. Choose sources and scopes separately.',
+                    ),
+                    value: _knowledge,
+                    onChanged: !_ai || _saving
+                        ? null
+                        : (value) => setState(() => _knowledge = value),
                   ),
                 ],
               ),
@@ -148,8 +164,10 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
                           'locale': 'en',
                           'ai_consent': _ai,
                           'memory_consent': _memory,
+                          'knowledge_consent': _knowledge,
                         }),
                       );
+                  ref.invalidate(agentStatusProvider);
                   messenger.showSnackBar(
                     const SnackBar(content: Text('Profile saved')),
                   );

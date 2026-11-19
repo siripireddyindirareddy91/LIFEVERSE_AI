@@ -19,6 +19,7 @@ mixin _$ProfileData {
   String get timezone;
   bool get aiConsent;
   bool get memoryConsent;
+  bool get knowledgeConsent;
 
   /// Create a copy of ProfileData
   /// with the given fields replaced by the non-null parameter values.
@@ -44,7 +45,9 @@ mixin _$ProfileData {
             (identical(other.aiConsent, aiConsent) ||
                 other.aiConsent == aiConsent) &&
             (identical(other.memoryConsent, memoryConsent) ||
-                other.memoryConsent == memoryConsent));
+                other.memoryConsent == memoryConsent) &&
+            (identical(other.knowledgeConsent, knowledgeConsent) ||
+                other.knowledgeConsent == knowledgeConsent));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -57,11 +60,12 @@ mixin _$ProfileData {
     timezone,
     aiConsent,
     memoryConsent,
+    knowledgeConsent,
   );
 
   @override
   String toString() {
-    return 'ProfileData(userId: $userId, displayName: $displayName, locale: $locale, timezone: $timezone, aiConsent: $aiConsent, memoryConsent: $memoryConsent)';
+    return 'ProfileData(userId: $userId, displayName: $displayName, locale: $locale, timezone: $timezone, aiConsent: $aiConsent, memoryConsent: $memoryConsent, knowledgeConsent: $knowledgeConsent)';
   }
 }
 
@@ -79,6 +83,7 @@ abstract mixin class $ProfileDataCopyWith<$Res> {
     String timezone,
     bool aiConsent,
     bool memoryConsent,
+    bool knowledgeConsent,
   });
 }
 
@@ -100,6 +105,7 @@ class _$ProfileDataCopyWithImpl<$Res> implements $ProfileDataCopyWith<$Res> {
     Object? timezone = null,
     Object? aiConsent = null,
     Object? memoryConsent = null,
+    Object? knowledgeConsent = null,
   }) {
     return _then(
       _self.copyWith(
@@ -126,6 +132,10 @@ class _$ProfileDataCopyWithImpl<$Res> implements $ProfileDataCopyWith<$Res> {
         memoryConsent: null == memoryConsent
             ? _self.memoryConsent
             : memoryConsent // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        knowledgeConsent: null == knowledgeConsent
+            ? _self.knowledgeConsent
+            : knowledgeConsent // ignore: cast_nullable_to_non_nullable
                   as bool,
       ),
     );
@@ -232,6 +242,7 @@ extension ProfileDataPatterns on ProfileData {
       String timezone,
       bool aiConsent,
       bool memoryConsent,
+      bool knowledgeConsent,
     )?
     $default, {
     required TResult orElse(),
@@ -246,6 +257,7 @@ extension ProfileDataPatterns on ProfileData {
           _that.timezone,
           _that.aiConsent,
           _that.memoryConsent,
+          _that.knowledgeConsent,
         );
       case _:
         return orElse();
@@ -274,6 +286,7 @@ extension ProfileDataPatterns on ProfileData {
       String timezone,
       bool aiConsent,
       bool memoryConsent,
+      bool knowledgeConsent,
     )
     $default,
   ) {
@@ -287,6 +300,7 @@ extension ProfileDataPatterns on ProfileData {
           _that.timezone,
           _that.aiConsent,
           _that.memoryConsent,
+          _that.knowledgeConsent,
         );
       case _:
         throw StateError('Unexpected subclass');
@@ -314,6 +328,7 @@ extension ProfileDataPatterns on ProfileData {
       String timezone,
       bool aiConsent,
       bool memoryConsent,
+      bool knowledgeConsent,
     )?
     $default,
   ) {
@@ -327,6 +342,7 @@ extension ProfileDataPatterns on ProfileData {
           _that.timezone,
           _that.aiConsent,
           _that.memoryConsent,
+          _that.knowledgeConsent,
         );
       case _:
         return null;
@@ -344,6 +360,7 @@ class _ProfileData implements ProfileData {
     this.timezone = 'UTC',
     this.aiConsent = false,
     this.memoryConsent = false,
+    this.knowledgeConsent = false,
   });
   factory _ProfileData.fromJson(Map<String, dynamic> json) =>
       _$ProfileDataFromJson(json);
@@ -364,6 +381,9 @@ class _ProfileData implements ProfileData {
   @override
   @JsonKey()
   final bool memoryConsent;
+  @override
+  @JsonKey()
+  final bool knowledgeConsent;
 
   /// Create a copy of ProfileData
   /// with the given fields replaced by the non-null parameter values.
@@ -392,7 +412,9 @@ class _ProfileData implements ProfileData {
             (identical(other.aiConsent, aiConsent) ||
                 other.aiConsent == aiConsent) &&
             (identical(other.memoryConsent, memoryConsent) ||
-                other.memoryConsent == memoryConsent));
+                other.memoryConsent == memoryConsent) &&
+            (identical(other.knowledgeConsent, knowledgeConsent) ||
+                other.knowledgeConsent == knowledgeConsent));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -405,11 +427,12 @@ class _ProfileData implements ProfileData {
     timezone,
     aiConsent,
     memoryConsent,
+    knowledgeConsent,
   );
 
   @override
   String toString() {
-    return 'ProfileData(userId: $userId, displayName: $displayName, locale: $locale, timezone: $timezone, aiConsent: $aiConsent, memoryConsent: $memoryConsent)';
+    return 'ProfileData(userId: $userId, displayName: $displayName, locale: $locale, timezone: $timezone, aiConsent: $aiConsent, memoryConsent: $memoryConsent, knowledgeConsent: $knowledgeConsent)';
   }
 }
 
@@ -429,6 +452,7 @@ abstract mixin class _$ProfileDataCopyWith<$Res>
     String timezone,
     bool aiConsent,
     bool memoryConsent,
+    bool knowledgeConsent,
   });
 }
 
@@ -450,6 +474,7 @@ class __$ProfileDataCopyWithImpl<$Res> implements _$ProfileDataCopyWith<$Res> {
     Object? timezone = null,
     Object? aiConsent = null,
     Object? memoryConsent = null,
+    Object? knowledgeConsent = null,
   }) {
     return _then(
       _ProfileData(
@@ -476,6 +501,10 @@ class __$ProfileDataCopyWithImpl<$Res> implements _$ProfileDataCopyWith<$Res> {
         memoryConsent: null == memoryConsent
             ? _self.memoryConsent
             : memoryConsent // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        knowledgeConsent: null == knowledgeConsent
+            ? _self.knowledgeConsent
+            : knowledgeConsent // ignore: cast_nullable_to_non_nullable
                   as bool,
       ),
     );

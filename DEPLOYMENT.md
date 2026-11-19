@@ -67,6 +67,49 @@ Generated Freezed/JSON files are included; CI regenerates them before checks.
 ## GitHub
 
 Phases 1 and 2 are pushed to milestone branches with successful Actions runs.
-Current Phase 3 work is local on `codex/phase-3-core-life-management`.
+Phase 3 is pushed at `100a7a1` on `codex/phase-3-core-life-management` with both Actions jobs green. Phase 4 is local on `codex/phase-4-agentic-ai`.
 CI runs backend/RLS tests and Flutter format/analyze/test/debug build when pushed.
 No cloud deployment or GitHub push is implied by a successful local check.
+
+
+## Phase 4 worker and retrieval
+
+Before revision `0003`, provision the dispatcher role with `infrastructure/init-db.sql`
+using migration credentials. For an existing Docker volume, run:
+
+```sh
+docker compose exec db psql -U lifeverse -d lifeverse -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/01-roles.sql
+docker compose up --build
+```
+
+The API applies migrations before its liveness health check releases the worker.
+Outside Compose, run `alembic upgrade head` then `python -m app.agentic.worker`
+from `backend/`, alongside the API. Configure `RUNTIME_DATABASE_URL` with the
+restricted application role and `DISPATCH_DATABASE_URL` with the queue-only
+`lifeverse_dispatcher` role. The worker rejects dispatch credentials that are
+superuser, bypass RLS, or can select profiles. Production must rotate the example
+passwords and provision roles/default grants using its actual migration owner.
+Do not give the worker migration or operations credentials.
+
+Set `AI_MODEL` to an OpenAI Chat Completions model supporting strict structured
+outputs and function calling, and `AI_API_KEY` server-side. `AI_EMBEDDING_MODEL`
+is optional; choose a compatible embeddings model and set its supported dimension
+count through `AI_EMBEDDING_DIMENSIONS` (default 1536). Without it, shared sources
+are retrieved by keyword. Enabling it does not index existing data automatically:
+choose Index on each shared source after profile consent. Model/dimension changes
+require re-indexing sources. No AI credentials are included in the Flutter app.
+
+Start at Agent center, grant AI permission in Profile, choose per-run read scopes,
+and optionally enable Prepare changes. Queued work survives API requests and
+worker restarts. Monitor heartbeat age, queue depth, failed runs and provider costs;
+the UI reports an offline worker. Defaults: 10 runs/day, 10 model calls, 12 tool
+calls, 8 proposals, 240 seconds/run, 60-minute approvals, 30-day history. Configure
+these bounded settings in `.env.example`. Budgets are application controls; also
+set provider account spending limits. A maximum of three claimed attempts may
+recover a run; cumulative model/tool budgets are retained.
+
+Run the trusted daily retention command for expired knowledge, memory, chat and
+agent history and old content-free counters. Deleting a source clears its index;
+older chat/run excerpts are separate history and can be deleted by their owner.
+Live provider calls and Supabase account flows require actual configuration and
+have not been validated with credentials in this workspace.

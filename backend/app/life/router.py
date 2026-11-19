@@ -10,6 +10,8 @@ from sqlalchemy.orm import Session
 from app.auth import Identity, current_identity
 from app.database import user_session
 from app.models import Profile
+from app.agentic.models import RetrievalChunk
+from app.agentic.rag import invalidate_source
 from app.life.models import CalendarEvent, ConsentEvent, Goal, Habit, HabitCheckIn, Memory, Task
 from app.life.schemas import (
     CheckInWrite,
@@ -60,13 +62,29 @@ def profile(user: User, db: DB):
 
 @router.put("/profile", response_model=ProfileRead)
 def save_profile(payload: ProfileWrite, user: User, db: DB):
-    row = db.get(Profile, user.id)
+    row = db.scalar(select(Profile).where(Profile.user_id == user.id).with_for_update())
     if row is None:
         row = Profile(user_id=user.id, ai_consent=False, memory_consent=False)
         db.add(row)
-    for field, kind in (("ai_consent", "ai"), ("memory_consent", "memory")):
+    for field, kind in (
+        ("ai_consent", "ai"),
+        ("memory_consent", "memory"),
+        ("knowledge_consent", "knowledge"),
+    ):
         if bool(getattr(row, field)) != getattr(payload, field):
             db.add(ConsentEvent(user_id=user.id, kind=kind, allowed=getattr(payload, field)))
+    if row.memory_consent and not payload.memory_consent:
+        db.execute(
+            delete(RetrievalChunk).where(
+                RetrievalChunk.user_id == user.id, RetrievalChunk.memory_id.is_not(None)
+            )
+        )
+    if row.knowledge_consent and not payload.knowledge_consent:
+        db.execute(
+            delete(RetrievalChunk).where(
+                RetrievalChunk.user_id == user.id, RetrievalChunk.source_id.is_not(None)
+            )
+        )
     update_record(row, payload)
     db.flush()
     return row
@@ -330,6 +348,7 @@ def edit_memory(record_id: UUID, payload: MemoryWrite, user: User, db: DB):
     purge_expired(db, user)
     row = get_owned(db, Memory, record_id, user)
     update_record(row, payload)
+    invalidate_source(db, user.id, "memory", row)
     db.flush()
     return row
 

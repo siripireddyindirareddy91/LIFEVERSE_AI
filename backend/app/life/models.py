@@ -86,10 +86,14 @@ class HabitCheckIn(Owned, Base):
 
 class Memory(Owned, Base):
     __tablename__ = "memories"
+    __table_args__ = (UniqueConstraint("user_id", "id"),)
     title: Mapped[str] = mapped_column(String(120))
     content: Mapped[str] = mapped_column(Text)
     allow_ai: Mapped[bool] = mapped_column(Boolean, default=False)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
+    revision: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True), default=uuid4, server_default=func.gen_random_uuid()
+    )
 
 
 class Conversation(Owned, Base):
@@ -121,7 +125,7 @@ class Message(Owned, Base):
 
 class ConsentEvent(Owned, Base):
     __tablename__ = "consent_events"
-    __table_args__ = (CheckConstraint("kind IN ('ai', 'memory')"),)
+    __table_args__ = (CheckConstraint("kind IN ('ai', 'memory', 'knowledge')"),)
     kind: Mapped[str] = mapped_column(String(12))
     allowed: Mapped[bool] = mapped_column(Boolean)
 

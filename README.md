@@ -4,7 +4,7 @@
 
 Android/iOS application built with Flutter and Dart, FastAPI, PostgreSQL and
 Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundation;
-Phase 3 adds connected core life management.
+Phase 3 adds connected core life management; Phase 4 adds supervised agent workflows.
 
 ## Included
 
@@ -24,6 +24,10 @@ Phase 3 adds connected core life management.
 - A Life Intelligence dashboard calculated from your own saved records.
 - A bounded LangGraph AI Assistant with a real provider adapter, opt-in context,
   retained/deletable conversations, retry identifiers and request limits.
+
+- LangGraph supervisor, core specialists and allowlisted tools.
+- Durable agent queue, exact-preview approvals and execution history.
+- User-controlled knowledge sources, keyword RAG and optional real embeddings.
 
 ## Start locally
 
@@ -46,3 +50,7 @@ Phase 2: [scope and status](docs/PHASE_2_PLAN.md), [brand guide](docs/BRAND_GUID
 and [verification](docs/PHASE_2_VERIFICATION.md).
 Phase 3: [scope](docs/PHASE_3_PLAN.md), [verification](docs/PHASE_3_VERIFICATION.md)
 and [AI design](AI_AGENT_DESIGN.md).
+
+Phase 4: [scope](docs/PHASE_4_PLAN.md), [verification](docs/PHASE_4_VERIFICATION.md).
+Phases 1-3 are pushed on milestone branches with green Actions. Phase 4 is local
+on `codex/phase-4-agentic-ai`; live Supabase and AI credentials remain unconfigured.

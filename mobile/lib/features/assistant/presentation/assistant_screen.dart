@@ -132,6 +132,11 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
           spacing: 8,
           children: [
             TextButton.icon(
+              onPressed: _sending ? null : () => context.push('/agents'),
+              icon: const Icon(Icons.auto_awesome_outlined),
+              label: const Text('Plan with agents'),
+            ),
+            TextButton.icon(
               icon: const Icon(Icons.add_comment_outlined),
               label: const Text('New conversation'),
               onPressed: _sending

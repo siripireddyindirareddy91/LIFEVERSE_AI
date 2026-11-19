@@ -13,6 +13,7 @@ _ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => _ProfileData(
   timezone: json['timezone'] as String? ?? 'UTC',
   aiConsent: json['ai_consent'] as bool? ?? false,
   memoryConsent: json['memory_consent'] as bool? ?? false,
+  knowledgeConsent: json['knowledge_consent'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ProfileDataToJson(_ProfileData instance) =>
@@ -23,6 +24,7 @@ Map<String, dynamic> _$ProfileDataToJson(_ProfileData instance) =>
       'timezone': instance.timezone,
       'ai_consent': instance.aiConsent,
       'memory_consent': instance.memoryConsent,
+      'knowledge_consent': instance.knowledgeConsent,
     };
 
 _TaskItem _$TaskItemFromJson(Map<String, dynamic> json) => _TaskItem(

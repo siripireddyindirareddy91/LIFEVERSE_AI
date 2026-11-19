@@ -1,3 +1,5 @@
+import 'package:lifeverse_ai/features/agents/data/agent_repository.dart';
+import 'package:lifeverse_ai/features/agents/application/agent_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,6 +22,7 @@ Future<void> mountCore(
   Size size = const Size(430, 932),
   double scale = 1,
   bool capture = false,
+  AgentRepository? agents,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -38,6 +41,7 @@ Future<void> mountCore(
         configProvider.overrideWithValue(const AppConfig()),
         preferencesProvider.overrideWithValue(preferences),
         lifeRepositoryProvider.overrideWithValue(repo),
+        if (agents != null) agentRepositoryProvider.overrideWithValue(agents),
         currentSessionProvider.overrideWithValue(
           Session(
             accessToken: 'test-only',

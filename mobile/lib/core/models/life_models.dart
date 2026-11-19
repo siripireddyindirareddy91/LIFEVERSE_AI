@@ -11,6 +11,7 @@ abstract class ProfileData with _$ProfileData {
     @Default('UTC') String timezone,
     @Default(false) bool aiConsent,
     @Default(false) bool memoryConsent,
+    @Default(false) bool knowledgeConsent,
   }) = _ProfileData;
   factory ProfileData.fromJson(Map<String, dynamic> json) =>
       _$ProfileDataFromJson(json);

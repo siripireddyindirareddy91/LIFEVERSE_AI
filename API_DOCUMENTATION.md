@@ -44,4 +44,47 @@ Chat requires UUID `request_id`, `message`, optional `conversation_id`, and expl
 conversation, persisted reply, context counts and cached-retry state. 403 means
 missing consent; 409 is a conflict/in-progress request; 422 is invalid input; 429
 is a successful-request limit; 503 is configuration/provider/infrastructure failure.
-OpenAPI provides complete typed contracts. No action execution endpoint exists.
+OpenAPI provides complete typed contracts. Phase 3 chat stays read-only; the separate Phase 4 approval API is below.
+
+
+## Phase 4 agentic API
+
+All paths below are under `/api/v1` and require verified Supabase identity.
+
+| Operation | Endpoint |
+|---|---|
+| Availability, consent, heartbeat and limits | GET `/agents/status` |
+| Specialist/tool and permission catalog | GET `/agents/catalog` |
+| Paginated history / queue a run | GET, POST `/agents/runs` |
+| Detail with proposals, sources and timeline | GET `/agents/runs/{id}` |
+| Approve selected proposals or reject all | POST `/agents/runs/{id}/decision` |
+| Cancel queued/running/unapproved work | POST `/agents/runs/{id}/cancel` |
+| Delete terminal run history | DELETE `/agents/runs/{id}` |
+| Knowledge list/create | GET, POST `/knowledge` |
+| Knowledge detail/edit/delete | GET, PUT, DELETE `/knowledge/{id}` |
+| Current memory source | GET `/memories/{id}` |
+| Explicit embedding indexing | POST `/retrieval/{kind}/{id}/index` |
+
+Queue input: UUID `request_id`, `prompt` (1–4000 characters), `scopes` selected
+from planner/goals/habits/memory/knowledge/insights (default empty), and
+`allow_proposals` (default false). Identical retries return the existing run;
+conflicting reuse returns 409. The worker processes asynchronously. Poll detail
+while queued/running; no business records change during planning.
+
+Decision input: a new UUID `request_id`, `decision: approve|reject`, `action_ids`,
+`digest` and `nonce` from the exact detail response. Approve requires at least one
+selected action and its dependencies. Reject uses an empty selection. All selected
+writes apply atomically or the run becomes stale with none applied. Identical
+retries return the saved outcome. Digest/nonce mismatch or stopped runs return 409;
+invalid selection returns 422. Approval cannot expand the original scopes.
+
+Knowledge input: title, content (max 30000 characters), `allow_ai` (false by default)
+and optional future `expires_at`. PUT replaces editable fields and invalidates its
+index. Index kind is memory or knowledge; global AI, per-kind consent, per-source
+sharing and a configured embedding provider are all required. Source deletion
+cascades its chunks. Expired sources cannot be retrieved.
+
+Detail contains field-by-field proposal previews and dependencies, actual execution
+results and attributed retrieval excerpts. Run deletion removes run content,
+proposals, decisions and steps, while content-free daily usage counts and applied
+life records remain. The Flutter history export copies this owner-only detail.

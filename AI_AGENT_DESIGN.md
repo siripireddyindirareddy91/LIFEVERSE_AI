@@ -1,4 +1,6 @@
-# Phase 3 AI Assistant
+# AI workflows
+
+## Phase 3 Assistant
 
 The implemented LangGraph is a bounded, read-only workflow:
 `START → supervisor → assistant → END`. Typed state carries authorized messages,
@@ -49,3 +51,36 @@ copy of context. Provider retention follows the provider account's policy;
 
 Test providers exist only in tests. Live provider/Supabase end-to-end success
 requires actual credentials and an executed request; neither is assumed.
+
+
+## Phase 4 supervisor and specialists
+
+The separate agent-run graph routes START -> supervisor -> specialist <-> tools ->
+finalize -> END. Supervisor produces a validated ordered plan of 1-3 authorized
+specialists. Core specialists are Assistant, Planner, Goals, Habits, Memory,
+Knowledge and Insights. Each has a fixed tool list and strict argument schema;
+the supervisor cannot extend scopes. Future finance/travel/automation/document
+modules from the master reference are outside the current core implementation.
+
+All model calls reserve a persisted counter before leaving a short database
+transaction. Tool calls, context size, proposal count, elapsed time and daily
+requests are bounded. A durable worker uses an immutable owner from the queue,
+owner-scoped database transactions, renewable leases and attempt fencing. Recovery
+re-plans only unapproved work while retaining budgets and earlier step metadata.
+
+Read tools fetch actual life records. Memory/knowledge retrieval checks global and
+per-kind consent plus each source sharing flag/expiry/revision. Shared text is
+chunked locally; explicit indexing calls the real configured embedding provider.
+Keyword retrieval works without embeddings. Hybrid retrieval combines full-text
+and bounded cosine rankings. Results carry source labels and excerpts. The final
+structured summary rejects invented citation IDs. Citation identity validation is
+not semantic fact checking. There are no runtime fake vectors/model responses.
+
+Write tools prepare typed proposals only. The user sees proposed fields and
+before/after values, chooses a subset, and sends the digest/nonce from that preview.
+Dependencies, current consent, evidence revisions and existing-record hashes must
+still match. The executor applies all selected writes transactionally, records
+actual results, and rejects unselected proposals. Rejection, cancellation, expiry,
+worker failure and stale previews do not apply proposals. Repeated decisions do
+not repeat writes. No external messaging, bookings, purchases or arbitrary code
+is available. Read-only chat and agent history remain distinct and deletable.

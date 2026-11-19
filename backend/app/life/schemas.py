@@ -29,6 +29,7 @@ class ProfileWrite(Input):
     timezone: str = Field(default="UTC", max_length=64)
     ai_consent: bool = False
     memory_consent: bool = False
+    knowledge_consent: bool = False
 
     @field_validator("timezone")
     @classmethod
@@ -43,6 +44,8 @@ class ProfileWrite(Input):
     def consent(self):
         if self.memory_consent and not self.ai_consent:
             raise ValueError("AI consent is required before sharing memories with AI")
+        if self.knowledge_consent and not self.ai_consent:
+            raise ValueError("AI consent is required before processing knowledge with AI")
         return self
 
 

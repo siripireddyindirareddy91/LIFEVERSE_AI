@@ -11,6 +11,8 @@ from app.config import get_settings
 from app.database import engine
 from app.life.router import router as life_router
 from app.life.assistant import router as assistant_router
+from app.agentic.router import router as agentic_router
+from app.agentic.common import AgentError
 
 
 @asynccontextmanager
@@ -30,6 +32,23 @@ app.add_middleware(
 )
 app.include_router(life_router)
 app.include_router(assistant_router)
+app.include_router(agentic_router)
+
+
+@app.exception_handler(AgentError)
+async def agent_error(request, error):
+    status = (
+        403
+        if error.code == "consent_required"
+        else 404
+        if error.code == "not_found"
+        else 422
+        if error.code == "invalid_source"
+        else 409
+        if error.code.startswith("stale")
+        else 503
+    )
+    return JSONResponse(status_code=status, content={"detail": error.message, "code": error.code})
 
 
 @app.exception_handler(SQLAlchemyError)

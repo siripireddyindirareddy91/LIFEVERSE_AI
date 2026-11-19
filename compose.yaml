@@ -27,5 +27,21 @@ services:
       db:
         condition: service_healthy
     command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  agent_worker:
+    build: ./backend
+    env_file: .env
+    environment:
+      RUNTIME_DATABASE_URL: postgresql+psycopg://lifeverse_app:lifeverse_app_local@db:5432/lifeverse
+      DISPATCH_DATABASE_URL: postgresql+psycopg://lifeverse_dispatcher:dispatcher_local@db:5432/lifeverse
+    command: ["python", "-m", "app.agentic.worker"]
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
 volumes:
   postgres_data:

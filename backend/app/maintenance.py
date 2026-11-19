@@ -17,6 +17,15 @@ def main():
         # Requires an operations role authorized to enforce cross-user retention.
         connection.execute(text("DELETE FROM conversations WHERE expires_at <= now()"))
         connection.execute(text("DELETE FROM memories WHERE expires_at <= now()"))
+        connection.execute(text("DELETE FROM knowledge_sources WHERE expires_at <= now()"))
+        # Cascades remove proposals, queue entries, decisions, sources and steps.
+        connection.execute(text("DELETE FROM agent_runs WHERE expires_at <= now()"))
+        connection.execute(
+            text("DELETE FROM agent_usage WHERE created_at < now() - interval '2 days'")
+        )
+        connection.execute(
+            text("DELETE FROM agent_workers WHERE last_seen < now() - interval '1 day'")
+        )
         connection.execute(
             text("DELETE FROM ai_usage WHERE created_at < now() - interval '2 days'")
         )

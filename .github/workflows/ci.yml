@@ -35,6 +35,7 @@ jobs:
       - run: ruff format --check backend
       - run: pytest backend/tests -q
         env:
+          TEST_DISPATCH_DATABASE_URL: postgresql+psycopg://lifeverse_dispatcher:dispatcher_local@localhost:5432/lifeverse
           TEST_DATABASE_URL: postgresql+psycopg://lifeverse_app:lifeverse_app_local@localhost:5432/lifeverse
   mobile:
     runs-on: ubuntu-latest

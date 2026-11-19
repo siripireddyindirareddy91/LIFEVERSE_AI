@@ -1,3 +1,4 @@
+import '../../agents/application/agent_providers.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +86,7 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
                 context,
                 title: 'Erase all memories?',
                 message:
-                    'All saved memories will be permanently deleted. Chats are separate and can be deleted in Assistant.',
+                    'All saved memories and their retrieval indexes will be deleted. Past chats and agent excerpts are separate; delete their history to remove those copies.',
                 action: 'Erase all',
               )) {
                 return;
@@ -133,6 +134,38 @@ class _MemoryScreenState extends ConsumerState<MemoryScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text('Expires: ${deviceDate(memory.expiresAt!)}'),
+                ),
+              if (memory.allowAi)
+                TextButton.icon(
+                  icon: const Icon(Icons.manage_search),
+                  label: const Text('Index for semantic retrieval'),
+                  onPressed: () async {
+                    if (!await confirmAction(
+                      context,
+                      title: 'Index this shared memory?',
+                      message:
+                          'Its text will be sent to the embedding provider. Memory permission in your profile is also required.',
+                      action: 'Index memory',
+                    )) {
+                      return;
+                    }
+                    try {
+                      await ref
+                          .read(agentRepositoryProvider)
+                          .index('memory', memory.id);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Memory indexed')),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.toString())));
+                      }
+                    }
+                  },
                 ),
               RecordActions(
                 onEdit: () => openRecordEditor(

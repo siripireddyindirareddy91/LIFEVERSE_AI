@@ -17,6 +17,12 @@ class SettingsScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(Space.lg),
       children: [
         Text(strings.settings, style: Theme.of(context).textTheme.displaySmall),
+        ListTile(
+          leading: const Icon(Icons.auto_awesome_outlined),
+          title: const Text('Agent center'),
+          subtitle: const Text('Plans, approvals and execution history'),
+          onTap: () => context.push('/agents'),
+        ),
         const SizedBox(height: Space.lg),
         FoundationPanel(
           child: Column(
