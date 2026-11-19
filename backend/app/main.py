@@ -1,17 +1,16 @@
 from contextlib import asynccontextmanager
-from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict
-from sqlalchemy import select, text
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
 
 from app.auth import Identity, current_identity
 from app.config import get_settings
-from app.database import engine, user_session
-from app.models import Profile
+from app.database import engine
+from app.life.router import router as life_router
+from app.life.assistant import router as assistant_router
 
 
 @asynccontextmanager
@@ -26,9 +25,19 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,
     allow_credentials=True,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Authorization", "Content-Type"],
 )
+app.include_router(life_router)
+app.include_router(assistant_router)
+
+
+@app.exception_handler(SQLAlchemyError)
+async def database_unavailable(request, error):
+    return JSONResponse(
+        status_code=503,
+        content={"detail": "The database could not complete this request. Please retry."},
+    )
 
 
 @app.get("/health/live", tags=["health"])
@@ -51,22 +60,3 @@ def readiness():
 @app.get("/api/v1/me", tags=["identity"])
 def me(identity: Identity = Depends(current_identity)):
     return {"id": str(identity.id)}
-
-
-class ProfileResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    user_id: UUID
-    display_name: str
-    locale: str
-    timezone: str
-
-
-@app.get("/api/v1/profile", response_model=ProfileResponse, tags=["identity"])
-def profile(
-    identity: Identity = Depends(current_identity),
-    session: Session = Depends(user_session),
-):
-    row = session.scalar(select(Profile).where(Profile.user_id == identity.id))
-    if row is None:
-        raise HTTPException(404, "Profile not created; onboarding is a later phase")
-    return row

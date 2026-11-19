@@ -48,7 +48,11 @@ void main() {
     await tester.tap(find.text('Dark'));
     await tester.pumpAndSettle();
     expect((await SharedPreferences.getInstance()).getString('theme'), 'dark');
-    await tester.tap(find.text('Studio'));
+    await tester.scrollUntilVisible(
+      find.text('Interface Studio').hitTestable(),
+      200,
+    );
+    await tester.tap(find.text('Interface Studio'));
     await tester.pumpAndSettle();
     expect(find.text('Aurora Nebula'), findsOneWidget);
     await tester.scrollUntilVisible(

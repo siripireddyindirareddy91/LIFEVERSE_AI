@@ -91,6 +91,18 @@ class SettingsScreen extends ConsumerWidget {
           trailing: const Icon(Icons.chevron_right),
           onTap: () => context.push('/foundation'),
         ),
+        ListTile(
+          title: const Text('Your profile and permissions'),
+          leading: const Icon(Icons.person_outline_rounded),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/profile'),
+        ),
+        ListTile(
+          title: const Text('Interface Studio'),
+          leading: const Icon(Icons.palette_outlined),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/design'),
+        ),
         const SizedBox(height: Space.lg),
         FoundationPanel(
           child: Column(

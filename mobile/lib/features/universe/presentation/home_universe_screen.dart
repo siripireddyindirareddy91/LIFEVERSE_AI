@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
+import '../../profile/application/account_providers.dart';
+import '../../life/application/life_providers.dart';
 import '../../../shared/theme/tokens.dart';
 import '../../../shared/widgets/ai_orb.dart';
 import '../../../shared/widgets/universe_components.dart';
@@ -18,6 +20,15 @@ class HomeUniverseScreen extends ConsumerWidget {
       children: [
         const SizedBox(height: Space.md),
         const StatusPill('YOUR PERSONAL UNIVERSE'),
+        if (ref.watch(currentSessionProvider) != null &&
+            ref.watch(profileProvider).value != null)
+          Padding(
+            padding: const EdgeInsets.only(top: Space.lg),
+            child: Text(
+              'Welcome back, ${ref.watch(profileProvider).value!.displayName}.',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
         const SizedBox(height: Space.lg),
         Text(
           'A little clarity.\nA world of possibility.',
@@ -38,7 +49,7 @@ class HomeUniverseScreen extends ConsumerWidget {
             animate: !ref.watch(reduceMotionProvider),
             onPressed: () => _openAI(context),
           ),
-          onSelected: (space) => context.push('/universe/${space.id}'),
+          onSelected: (space) => context.push(space.route),
         ),
         const SizedBox(height: Space.sm),
         Center(
@@ -59,6 +70,24 @@ class HomeUniverseScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: Space.xxl),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final entry in {
+              'Planner': '/planner',
+              'Goals': '/goals',
+              'Habits': '/habits',
+              'Memory': '/memory',
+              'Life Intelligence': '/insights',
+            }.entries)
+              ActionChip(
+                label: Text(entry.key),
+                onPressed: () => context.push(entry.value),
+              ),
+          ],
+        ),
+        const SizedBox(height: Space.lg),
         SectionHeading(
           title: 'Your universe, connected',
           subtitle: 'Choose a space and discover where it can take you.',
@@ -69,17 +98,20 @@ class HomeUniverseScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: Space.lg),
-        UniverseEmptyState(
-          title: 'Make room for your day',
-          message:
-              'Your plans, goals and routines will come together here as those spaces become available. Your universe begins with you.',
-          icon: Icons.wb_twilight_rounded,
-          action: LifeverseButton(
-            label: 'Explore your spaces',
-            secondary: true,
-            onPressed: () => context.go('/explore'),
+        if (ref.watch(currentSessionProvider) != null)
+          const _HomeLifeOverview()
+        else
+          UniverseEmptyState(
+            title: 'Make room for your day',
+            message:
+                'Bring your tasks, goals, daily habits and selected memories together. Sign in to your account to work with your private records.',
+            icon: Icons.wb_twilight_rounded,
+            action: LifeverseButton(
+              label: 'Explore your spaces',
+              secondary: true,
+              onPressed: () => context.go('/explore'),
+            ),
           ),
-        ),
         const SizedBox(height: Space.xl),
         Text(
           'Designed around your life. At your pace.',
@@ -93,19 +125,47 @@ class HomeUniverseScreen extends ConsumerWidget {
     ),
   );
 
-  void _openAI(BuildContext context) => showUniverseSheet(
-    context,
-    title: 'Meet your future AI space',
-    message:
-        'A single place to think, plan and connect the parts of your life. Conversations, voice and AI actions will arrive in a later phase. No microphone is active and no AI request has been sent.',
-    child: LifeverseButton(
-      label: 'Explore the universe',
-      onPressed: () {
-        Navigator.of(context, rootNavigator: true).pop();
-        context.go('/explore');
-      },
-    ),
-  );
+  void _openAI(BuildContext context) => context.push('/assistant');
+}
+
+class _HomeLifeOverview extends ConsumerWidget {
+  const _HomeLifeOverview();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => ref
+      .watch(dashboardProvider)
+      .when(
+        loading: () =>
+            const UniverseLoadingState(label: 'Gathering your life overview…'),
+        error: (error, stack) => UniverseErrorState(
+          message: error.toString(),
+          onRetry: () => ref.invalidate(dashboardProvider),
+        ),
+        data: (data) => UniverseSurface(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Today, in your universe',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: Space.md),
+              Text(
+                '${data.tasksDueToday} tasks due today • ${data.goalsActive} active goals',
+              ),
+              const SizedBox(height: Space.sm),
+              Text(
+                '${data.habitsCompletedToday} of ${data.habitCount} daily habits checked in • ${data.timezone}',
+              ),
+              const SizedBox(height: Space.md),
+              LifeverseButton(
+                label: 'View Life Intelligence',
+                secondary: true,
+                onPressed: () => context.push('/insights'),
+              ),
+            ],
+          ),
+        ),
+      );
 }
 
 class ExploreUniverseScreen extends StatelessWidget {
@@ -121,14 +181,11 @@ class ExploreUniverseScreen extends StatelessWidget {
         ),
         const SizedBox(height: Space.md),
         const Text(
-          'Find your way through the spaces that will connect your life. Each introduction shows what is planned.',
+          'Your planner, goals, daily habits and personal memory are ready to connect to your account. Other spaces show what is planned.',
         ),
         const SizedBox(height: Space.xl),
         for (final space in LifeSpace.values)
-          SpaceListTile(
-            space: space,
-            onTap: () => context.push('/universe/${space.id}'),
-          ),
+          SpaceListTile(space: space, onTap: () => context.push(space.route)),
       ],
     ),
   );

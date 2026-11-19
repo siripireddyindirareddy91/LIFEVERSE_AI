@@ -51,7 +51,9 @@ jobs:
           java-version: "17"
       - run: flutter pub get --enforce-lockfile
         working-directory: mobile
-      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: dart run build_runner build
+        working-directory: mobile
+      - run: dart format --output=none --set-exit-if-changed lib test tool
         working-directory: mobile
       - run: flutter analyze
         working-directory: mobile

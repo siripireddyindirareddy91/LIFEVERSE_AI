@@ -34,7 +34,7 @@ void main() {
     tester,
   ) async {
     await helpers.mount(tester);
-    await tester.tap(find.text('Explore'));
+    await tester.tap(find.byTooltip('Explore spaces'));
     await tester.pumpAndSettle();
     for (final space in LifeSpace.values) {
       await tester.scrollUntilVisible(
@@ -43,9 +43,13 @@ void main() {
       );
       await tester.tap(find.byKey(ValueKey('destination-${space.id}')));
       await tester.pumpAndSettle();
-      expect(find.text(space.headline), findsOneWidget);
-      expect(find.text('Coming in a later phase'), findsOneWidget);
-      await tester.tap(find.text('Back to your universe'));
+      if (space.route.startsWith('/universe/')) {
+        expect(find.text(space.headline), findsOneWidget);
+        expect(find.text('Coming in a later phase'), findsOneWidget);
+      } else {
+        expect(find.text('Connect your account'), findsOneWidget);
+      }
+      await tester.tap(find.byTooltip('Explore spaces'));
       await tester.pumpAndSettle();
     }
   });
@@ -57,11 +61,8 @@ void main() {
     await tester.scrollUntilVisible(find.byType(AIOrb).hitTestable(), 100);
     await tester.tap(find.byType(AIOrb));
     await tester.pumpAndSettle();
-    expect(find.text('Meet your future AI space'), findsOneWidget);
-    expect(find.textContaining('No microphone is active'), findsOneWidget);
-    await tester.tap(find.byTooltip('Close'));
-    await tester.pumpAndSettle();
-    expect(find.text('Meet your future AI space'), findsNothing);
+    expect(find.text('Connect your account'), findsOneWidget);
+    expect(find.text('Your AI service needs a connection'), findsNothing);
   });
 
   testWidgets('radial navigation opens a destination', (tester) async {
@@ -70,7 +71,7 @@ void main() {
     await tester.scrollUntilVisible(target.hitTestable(), 100);
     await tester.tap(target);
     await tester.pumpAndSettle();
-    expect(find.text(LifeSpace.goals.headline), findsOneWidget);
+    expect(find.text('Connect your account'), findsOneWidget);
   });
 
   testWidgets('all orb states are semantic and still under reduced motion', (

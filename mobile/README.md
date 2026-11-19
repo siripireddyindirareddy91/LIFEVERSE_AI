@@ -13,13 +13,14 @@ API URL and optional Supabase public configuration, then run:
 ```
 
 Routes: `/` (Home Universe), `/explore` (all spaces), `/universe/:space`
-(future-space introduction), `/design` (Studio), `/settings` (appearance/motion)
-and `/foundation` (connection setup).
+(future-space introduction), `/design` (Studio), `/settings` (appearance/motion),
+`/foundation` (connection setup), `/profile`, `/planner`, `/goals`, `/habits`,
+`/memory`, `/insights` and `/assistant`. Private routes require an account.
 Mobile uses bottom navigation; wide screens use a navigation rail. Routes can
 be opened programmatically using GoRouter. Verified HTTPS app/universal links
 require an owned domain and platform association files in a later phase.
 
-Sessions use platform secure storage. Sign-in UI awaits a later authorized phase.
+Sessions use platform secure storage. Email sign-in/sign-up/sign-out use Supabase.
 Preferences store appearance and reduced motion only. The Supabase client owns token refresh;
 the API client refreshes expired sessions before attaching a bearer token.
 Public config is compile-time data, never a place for server-side secrets.
@@ -35,8 +36,9 @@ production API/Supabase endpoints require HTTPS. Final application IDs
 and release signing should be finalized before distribution.
 
 The original code-native brand and generated launcher icons are described in
-`../docs/BRAND_GUIDE.md`. Home shows only an idle orb. Studio's other states are
-animation previews, not microphone activity or AI execution. Device reduced-motion
+`../docs/BRAND_GUIDE.md`. Home shows an idle orb; Assistant shows thinking only
+while a real request is pending. Studio's other states are animation previews.
+Device reduced-motion
 and accessible-navigation settings stop the orb, as does the saved motion setting.
 
 To reproduce visual QA captures, run:
@@ -46,3 +48,11 @@ To reproduce visual QA captures, run:
 ```
 
 Captures are written to ignored `build/previews/`; they are not baseline tests.
+
+Phase 3 preview command: `flutter test tool/core_preview_test.dart --update-goldens
+--dart-define=WRITE_UI_PREVIEWS=true`. These captures use clearly labeled test-only
+data, not a live account. No test adapter is registered by production bootstrap.
+
+Core DTOs live in `lib/core/models/`; regenerate with `dart run build_runner build`.
+Feature screens use the life repository and query/mutation providers. Account
+changes reset protected subtrees and repository identity dependencies.

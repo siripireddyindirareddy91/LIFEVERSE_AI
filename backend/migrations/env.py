@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 
 from app.config import get_settings
 from app.models import Base
+from app.life import models as life_models  # noqa: F401 - register migration metadata
 
 config = context.config
 target_metadata = Base.metadata

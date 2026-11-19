@@ -1,9 +1,9 @@
 FROM python:3.12.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
-COPY pyproject.toml ./
+COPY pyproject.toml requirements.lock ./
 COPY app ./app
-RUN pip install --no-cache-dir . && useradd --create-home lifeverse
+RUN pip install --no-cache-dir -r requirements.lock && pip install --no-cache-dir --no-deps . && useradd --create-home lifeverse
 COPY alembic.ini ./
 COPY migrations ./migrations
 USER lifeverse

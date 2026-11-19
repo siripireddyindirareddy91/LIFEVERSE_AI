@@ -16,3 +16,10 @@
 
 Report vulnerabilities privately to the repository owner. This foundation is not
 a production security audit or a claim of compliance.
+
+Phase 3 requires explicit AI-processing consent and independent memory-sharing
+permissions. Context-enriched chat turns are not silently reused in later prompts.
+Successful AI request counters survive chat deletion and contain no prompt/reply.
+Retention maintenance uses a separate operations role; runtime RLS must never be
+bypassed. Live Supabase/provider behavior and native iOS flows still require
+real-environment verification before release.

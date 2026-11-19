@@ -82,4 +82,11 @@ enum LifeSpace {
   final Color accent;
   final String description;
   String get shortLabel => label.substring(3);
+  String get route => switch (this) {
+    LifeSpace.life => '/planner',
+    LifeSpace.goals => '/goals',
+    LifeSpace.wellness => '/habits',
+    LifeSpace.knowledge => '/memory',
+    _ => '/universe/$id',
+  };
 }

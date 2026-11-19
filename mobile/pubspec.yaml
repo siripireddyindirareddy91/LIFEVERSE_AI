@@ -18,11 +18,17 @@ dependencies:
   supabase_flutter: ^2.10.3
   flutter_secure_storage: ^9.2.4
   shared_preferences: ^2.5.3
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+  uuid: ^4.5.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.10.4
+  freezed: ^3.2.3
+  json_serializable: ^6.11.1
 
 flutter:
   generate: true

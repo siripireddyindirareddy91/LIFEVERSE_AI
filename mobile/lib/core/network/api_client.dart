@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ApiFailure implements Exception {
-  const ApiFailure(this.message);
+  const ApiFailure(this.message, {this.statusCode});
   final String message;
+  final int? statusCode;
   @override
   String toString() => message;
 }
@@ -46,6 +47,53 @@ class ApiClient {
   }
 
   final Dio _dio;
+
+  Future<dynamic> request(
+    String path, {
+    String method = 'GET',
+    Map<String, dynamic>? query,
+    Object? data,
+    bool ai = false,
+  }) async {
+    try {
+      final response = await _dio.request<dynamic>(
+        path,
+        queryParameters: query,
+        data: data,
+        options: Options(
+          method: method,
+          receiveTimeout: ai
+              ? const Duration(seconds: 45)
+              : const Duration(seconds: 10),
+        ),
+      );
+      return response.data;
+    } on DioException catch (error) {
+      final status = error.response?.statusCode;
+      final body = error.response?.data;
+      final detail = body is Map ? body['detail'] : null;
+      if (detail is String) throw ApiFailure(detail, statusCode: status);
+      if (status == 422) {
+        throw const ApiFailure(
+          'Check your form values and try again.',
+          statusCode: 422,
+        );
+      }
+      if (status == 401) {
+        throw const ApiFailure(
+          'Your session has expired. Sign in again.',
+          statusCode: 401,
+        );
+      }
+      if (error.error is ApiFailure) throw error.error!;
+      throw ApiFailure(
+        status == null
+            ? 'Could not connect. Check your connection and retry.'
+            : 'The request could not be completed. Please retry.',
+        statusCode: status,
+      );
+    }
+  }
 
   Future<bool> checkReadiness() async {
     try {

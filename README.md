@@ -3,7 +3,8 @@
 **Your Life. Your Intelligence. Your Universe.**
 
 Android/iOS application built with Flutter and Dart, FastAPI, PostgreSQL and
-Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundation.
+Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundation;
+Phase 3 adds connected core life management.
 
 ## Included
 
@@ -17,7 +18,12 @@ Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundatio
 - Original LIFEVERSE branding and Android/iOS launcher icons.
 - Home Universe, nine-state animated AI orb and eight radial destinations.
 - Accessible conventional navigation, reduced motion and reusable UI components.
-- Studio for clearly labeled visual previews; future life modules remain inactive.
+- Studio for clearly labeled visual previews.
+- Account sign-in/sign-up, profile and AI/memory consent controls.
+- PostgreSQL-backed tasks, calendar events, goals, daily habits and personal memory.
+- A Life Intelligence dashboard calculated from your own saved records.
+- A bounded LangGraph AI Assistant with a real provider adapter, opt-in context,
+  retained/deletable conversations, retry identifiers and request limits.
 
 ## Start locally
 
@@ -30,10 +36,13 @@ Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundatio
 
 The default Android emulator API URL is `http://10.0.2.2:8000`. Auth remains
 unconfigured until you connect a Supabase project. Sign-in/onboarding screens
-and functional life-management features are outside these foundation phases.
+and AI remain unavailable until their services are configured. Core records do
+not require an AI provider. See DEPLOYMENT.md for setup.
 
 See [setup and deployment](DEPLOYMENT.md), [architecture](ARCHITECTURE.md),
 [database](DATABASE.md), [security](SECURITY.md), [API](API_DOCUMENTATION.md),
 [scope](docs/PHASE_1_PLAN.md) and [verification](docs/VERIFICATION.md).
 Phase 2: [scope and status](docs/PHASE_2_PLAN.md), [brand guide](docs/BRAND_GUIDE.md)
 and [verification](docs/PHASE_2_VERIFICATION.md).
+Phase 3: [scope](docs/PHASE_3_PLAN.md), [verification](docs/PHASE_3_VERIFICATION.md)
+and [AI design](AI_AGENT_DESIGN.md).

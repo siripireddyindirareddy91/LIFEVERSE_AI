@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
 
-from pydantic import field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     )
     supabase_url: str = ""
     cors_origins: list[str] = []
+    ai_api_key: SecretStr = SecretStr("")
+    ai_model: str = ""
+    ai_requests_per_day: int = Field(default=50, ge=1, le=1000)
+    ai_requests_per_minute: int = Field(default=5, ge=1, le=30)
+    conversation_retention_days: int = Field(default=7, ge=1, le=30)
 
     @field_validator("supabase_url")
     @classmethod
