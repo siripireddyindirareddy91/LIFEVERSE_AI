@@ -2,8 +2,8 @@
 
 **Your Life. Your Intelligence. Your Universe.**
 
-Phase 1 foundation for an Android/iOS application built with Flutter and Dart,
-FastAPI, PostgreSQL and Supabase Auth. Further phases await explicit direction.
+Android/iOS application built with Flutter and Dart, FastAPI, PostgreSQL and
+Supabase Auth. Phase 1 establishes the project; Phase 2 adds the UI/UX foundation.
 
 ## Included
 
@@ -14,6 +14,10 @@ FastAPI, PostgreSQL and Supabase Auth. Further phases await explicit direction.
 - FastAPI health and verified identity/profile routes.
 - Alembic migration, PostgreSQL owner isolation and separate runtime database role.
 - Docker development stack, environment examples, dependency locks and GitHub CI.
+- Original LIFEVERSE branding and Android/iOS launcher icons.
+- Home Universe, nine-state animated AI orb and eight radial destinations.
+- Accessible conventional navigation, reduced motion and reusable UI components.
+- Studio for clearly labeled visual previews; future life modules remain inactive.
 
 ## Start locally
 
@@ -26,8 +30,10 @@ FastAPI, PostgreSQL and Supabase Auth. Further phases await explicit direction.
 
 The default Android emulator API URL is `http://10.0.2.2:8000`. Auth remains
 unconfigured until you connect a Supabase project. Sign-in/onboarding screens
-and life-management features are outside Phase 1.
+and functional life-management features are outside these foundation phases.
 
 See [setup and deployment](DEPLOYMENT.md), [architecture](ARCHITECTURE.md),
 [database](DATABASE.md), [security](SECURITY.md), [API](API_DOCUMENTATION.md),
 [scope](docs/PHASE_1_PLAN.md) and [verification](docs/VERIFICATION.md).
+Phase 2: [scope and status](docs/PHASE_2_PLAN.md), [brand guide](docs/BRAND_GUIDE.md)
+and [verification](docs/PHASE_2_VERIFICATION.md).

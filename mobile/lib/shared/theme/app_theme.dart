@@ -62,6 +62,22 @@ abstract final class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: colors.surfaceContainerLow,
       ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(48, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ShapeTokens.controlRadius),
+          ),
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: colors.surface,
+        scrolledUnderElevation: 0,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: colors.surfaceContainerLow,
+        showDragHandle: true,
+      ),
     );
   }
 }

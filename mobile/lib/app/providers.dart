@@ -29,6 +29,23 @@ final themeProvider = NotifierProvider<ThemeController, ThemeMode>(
   ThemeController.new,
 );
 
+final reduceMotionProvider = NotifierProvider<ReduceMotionController, bool>(
+  ReduceMotionController.new,
+);
+
+class ReduceMotionController extends Notifier<bool> {
+  @override
+  bool build() =>
+      ref.watch(preferencesProvider).getBool('reduceMotion') ?? false;
+  Future<void> setEnabled(bool enabled) async {
+    final stored = await ref
+        .read(preferencesProvider)
+        .setBool('reduceMotion', enabled);
+    if (!stored) throw StateError('Unable to save motion preference.');
+    state = enabled;
+  }
+}
+
 class ThemeController extends Notifier<ThemeMode> {
   @override
   ThemeMode build() {

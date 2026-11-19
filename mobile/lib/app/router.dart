@@ -5,6 +5,9 @@ import '../features/foundation/presentation/foundation_screen.dart';
 import '../features/foundation/presentation/design_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../l10n/app_localizations.dart';
+import '../features/universe/domain/life_space.dart';
+import '../features/universe/presentation/home_universe_screen.dart';
+import '../shared/brand/lifeverse_brand.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
@@ -16,7 +19,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/',
+            builder: (context, state) => const HomeUniverseScreen(),
+          ),
+          GoRoute(
+            path: '/explore',
+            builder: (context, state) => const ExploreUniverseScreen(),
+          ),
+          GoRoute(
+            path: '/foundation',
             builder: (context, state) => const FoundationScreen(),
+          ),
+          GoRoute(
+            path: '/universe/:space',
+            builder: (context, state) {
+              final matches = LifeSpace.values.where(
+                (space) => space.id == state.pathParameters['space'],
+              );
+              if (matches.isEmpty) return const ExploreUniverseScreen();
+              return LifeSpaceScreen(space: matches.single);
+            },
           ),
           GoRoute(
             path: '/design',
@@ -60,31 +81,30 @@ class FoundationShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = AppLocalizations.of(context)!;
     final index = switch (location) {
-      '/design' => 1,
-      '/settings' => 2,
+      '/explore' => 1,
+      '/design' => 2,
+      '/settings' || '/foundation' => 3,
       _ => 0,
     };
-    final labels = [strings.foundation, strings.designSystem, strings.settings];
+    final labels = [
+      strings.home,
+      strings.explore,
+      strings.studio,
+      strings.settings,
+    ];
     const icons = [
       Icons.blur_on_rounded,
+      Icons.apps_rounded,
       Icons.palette_outlined,
       Icons.tune_rounded,
     ];
     void navigate(int index) =>
-        context.go(['/', '/design', '/settings'][index]);
+        context.go(['/', '/explore', '/design', '/settings'][index]);
     return LayoutBuilder(
       builder: (context, constraints) {
         final wide = constraints.maxWidth >= 760;
         return Scaffold(
-          appBar: AppBar(
-            title: Text(strings.appTitle),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 24),
-                child: Center(child: Text('PHASE 01')),
-              ),
-            ],
-          ),
+          appBar: AppBar(title: const BrandLockup(), toolbarHeight: 72),
           body: SafeArea(
             child: Row(
               children: [

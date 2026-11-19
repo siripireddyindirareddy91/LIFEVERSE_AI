@@ -10,6 +10,8 @@ Future<void> mount(
   WidgetTester tester, {
   Size size = const Size(390, 844),
   double scale = 1,
+  bool reduceMotion = true,
+  String theme = 'system',
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -17,7 +19,10 @@ Future<void> mount(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-  SharedPreferences.setMockInitialValues({});
+  SharedPreferences.setMockInitialValues({
+    'reduceMotion': reduceMotion,
+    'theme': theme,
+  });
   final preferences = await SharedPreferences.getInstance();
   await tester.pumpWidget(
     ProviderScope(
@@ -25,10 +30,7 @@ Future<void> mount(
         configProvider.overrideWithValue(const AppConfig()),
         preferencesProvider.overrideWithValue(preferences),
       ],
-      child: MediaQuery(
-        data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-        child: const LifeverseApp(),
-      ),
+      child: const LifeverseApp(),
     ),
   );
   await tester.pumpAndSettle();
@@ -37,17 +39,16 @@ Future<void> mount(
 void main() {
   testWidgets('navigation and appearance preference work', (tester) async {
     await mount(tester);
-    await tester.scrollUntilVisible(
-      find.text('Connect your identity').hitTestable(),
-      250,
+    expect(
+      find.text('A little clarity.\nA world of possibility.'),
+      findsOneWidget,
     );
-    expect(find.text('Connect your identity'), findsOneWidget);
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Dark'));
     await tester.pumpAndSettle();
     expect((await SharedPreferences.getInstance()).getString('theme'), 'dark');
-    await tester.tap(find.text('Design system'));
+    await tester.tap(find.text('Studio'));
     await tester.pumpAndSettle();
     expect(find.text('Aurora Nebula'), findsOneWidget);
     await tester.scrollUntilVisible(

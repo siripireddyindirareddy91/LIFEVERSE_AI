@@ -18,6 +18,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get foundation => 'Foundation';
 
   @override
+  String get home => 'Home';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get studio => 'Studio';
+
+  @override
   String get designSystem => 'Design system';
 
   @override

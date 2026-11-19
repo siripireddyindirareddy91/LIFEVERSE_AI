@@ -112,6 +112,24 @@ abstract class AppLocalizations {
   /// **'Foundation'**
   String get foundation;
 
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @studio.
+  ///
+  /// In en, this message translates to:
+  /// **'Studio'**
+  String get studio;
+
   /// No description provided for @designSystem.
   ///
   /// In en, this message translates to:

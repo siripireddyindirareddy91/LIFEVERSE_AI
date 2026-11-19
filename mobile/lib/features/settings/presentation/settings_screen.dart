@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/theme/tokens.dart';
@@ -58,6 +59,37 @@ class SettingsScreen extends ConsumerWidget {
                 ),
             ],
           ),
+        ),
+        const SizedBox(height: Space.lg),
+        SwitchListTile.adaptive(
+          title: const Text('Reduce motion'),
+          subtitle: const Text(
+            'Keep the AI orb still. Device accessibility settings always take priority.',
+          ),
+          value: ref.watch(reduceMotionProvider),
+          onChanged: (value) async {
+            try {
+              await ref.read(reduceMotionProvider.notifier).setEnabled(value);
+            } catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Could not save motion preference. Please retry.',
+                    ),
+                  ),
+                );
+              }
+            }
+          },
+        ),
+        const SizedBox(height: Space.lg),
+        ListTile(
+          title: const Text('Connection setup'),
+          subtitle: const Text('Backend and identity configuration'),
+          leading: const Icon(Icons.wifi_tethering),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/foundation'),
         ),
         const SizedBox(height: Space.lg),
         FoundationPanel(
