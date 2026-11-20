@@ -8,7 +8,7 @@
     "mobile": "success"
   },
   "phase7_branch": "codex/phase-7-testing-security",
-  "phase7_pushed": false,
+  "phase7_pushed": true,
   "backend_tests_passed": 209,
   "protected_method_paths_tested": 104,
   "backend_combined_coverage_percent": 81.74,
@@ -35,5 +35,12 @@
     "p95_budget_ms": 5000,
     "dashboard_statements": 9
   },
-  "limitations_document": "PHASE_7_SECURITY_REVIEW.md"
+  "limitations_document": "PHASE_7_SECURITY_REVIEW.md",
+  "phase7_commit": "cb2f7a54685698ca32866370ba740056825baa78",
+  "phase7_actions_run": 44689710162,
+  "phase7_checks": {
+    "backend": "success",
+    "mobile": "success",
+    "dependency-security": "success"
+  }
 }

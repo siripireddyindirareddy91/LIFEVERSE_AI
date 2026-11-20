@@ -67,7 +67,18 @@ Generated Freezed/JSON files are included; CI regenerates them before checks.
 ## GitHub
 
 Phases 1 and 2 are pushed to milestone branches with successful Actions runs.
-Phase 3 is pushed at `100a7a1` on `codex/phase-3-core-life-management` with both Actions jobs green. Phase 4 is pushed at `716233f` with both Actions jobs green. Phase 5 is local on `codex/phase-5-advanced-modules`.
+Phases 3–7 are pushed on their milestone branches with green Actions, including
+all three Phase 7 jobs in run 44689710162. See the phase verification documents
+for exact commits. Milestones are not merged into main.
+
+## Free phone preview
+
+The current Phase 8 request is a free Android APK without new hosting/store
+accounts. Use [the installation guide](docs/PHONE_INSTALL.md) and
+[preview release](https://github.com/siripireddyindirareddy91/LIFEVERSE_AI/releases/tag/android-preview-phase7).
+Backend/database deployment, production signing, iOS/store submissions and
+production monitoring remain pending. No paid resources were provisioned.
+The APK can display the interface without pretending online features work.
 CI runs backend/RLS tests and Flutter format/analyze/test/debug build when pushed.
 No cloud deployment or GitHub push is implied by a successful local check.
 

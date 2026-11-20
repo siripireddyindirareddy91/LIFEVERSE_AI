@@ -1,0 +1,38 @@
+{
+  "release_url": "https://github.com/siripireddyindirareddy91/LIFEVERSE_AI/releases/tag/android-preview-phase7",
+  "apk_url": "https://github.com/siripireddyindirareddy91/LIFEVERSE_AI/releases/download/android-preview-phase7/LIFEVERSE_AI-preview.apk",
+  "bytes": 185106899,
+  "sha256": "sha256:05600dbb00189610701cc5eced38659c6cfbb295fd82615acb0b59f95e099fd2",
+  "prerelease": true,
+  "public_download_verified": true,
+  "verification_date": "2026-11-20",
+  "source_commit": "cb2f7a54685698ca32866370ba740056825baa78",
+  "phase7_actions_run": 44689710162,
+  "phase7_checks": {
+    "backend": "success",
+    "mobile": "success",
+    "dependency-security": "success"
+  },
+  "package": "com.lifeverse.lifeverse_ai",
+  "version_name": "0.1.0",
+  "version_code": 1,
+  "min_sdk": 24,
+  "target_sdk": 36,
+  "abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86_64"
+  ],
+  "signature_verified": true,
+  "signing": "Android debug certificate; personal preview only",
+  "physical_device_tested": false,
+  "production_services_deployed": false,
+  "store_submitted": false,
+  "arm64_preview": {
+    "url": "https://github.com/siripireddyindirareddy91/LIFEVERSE_AI/releases/download/android-preview-phase7/LIFEVERSE_AI-preview-arm64.apk",
+    "bytes": 34507824,
+    "sha256": "sha256:eed195f984b240d0c5e4b8dc8ca414efb991160ac1b2515fc9b145bf86dcddbd",
+    "build": "profile; debug signed; ARM64 runtime",
+    "public_download_verified": true
+  }
+}
