@@ -1,0 +1,23 @@
+{
+  "name": "LIFEVERSE AI",
+  "short_name": "LIFEVERSE",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#080b18",
+  "theme_color": "#080b18",
+  "description": "LIFEVERSE AI interface preview. Online services require setup.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

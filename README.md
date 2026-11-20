@@ -2,6 +2,12 @@
 
 **Your Life. Your Intelligence. Your Universe.**
 
+**[Official download website](https://lifeverse-ai-universe.pages.dev/)** ·
+**[Flutter web preview](https://lifeverse-ai-universe.pages.dev/app/)**
+
+The current signed Android release preview is served through the website.
+See [publishing/build details](docs/PUBLIC_RELEASE.md) for scope and signing recovery.
+
 [Download the free Android test APK](https://github.com/siripireddyindirareddy91/LIFEVERSE_AI/releases/tag/android-preview-phase7)
 and follow the [phone installation guide](docs/PHONE_INSTALL.md).
 This is an interface preview; online account/data/AI services are not configured.

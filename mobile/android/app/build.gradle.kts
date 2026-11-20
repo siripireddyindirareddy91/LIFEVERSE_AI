@@ -5,6 +5,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val uploadStore = System.getenv("LIFEVERSE_KEYSTORE_PATH")
+val uploadStorePassword = System.getenv("LIFEVERSE_STORE_PASSWORD")
+val uploadAlias = System.getenv("LIFEVERSE_KEY_ALIAS")
+val uploadKeyPassword = System.getenv("LIFEVERSE_KEY_PASSWORD")
+val hasUploadSigning = listOf(uploadStore, uploadStorePassword, uploadAlias, uploadKeyPassword).all { !it.isNullOrBlank() }
+
 android {
     namespace = "com.lifeverse.lifeverse_ai"
     compileSdk = flutter.compileSdkVersion
@@ -31,11 +37,28 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasUploadSigning) {
+            create("upload") {
+                storeFile = file(uploadStore!!)
+                storePassword = uploadStorePassword
+                keyAlias = uploadAlias
+                keyPassword = uploadKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasUploadSigning) signingConfigs.getByName("upload") else null
+        }
+    }
+}
+
+tasks.configureEach {
+    if (name == "assembleRelease" || name == "bundleRelease" || name == "packageRelease") {
+        doFirst {
+            check(hasUploadSigning) { "Release signing requires LIFEVERSE_KEYSTORE_PATH, LIFEVERSE_STORE_PASSWORD, LIFEVERSE_KEY_ALIAS and LIFEVERSE_KEY_PASSWORD. Debug keys are never used for release." }
         }
     }
 }

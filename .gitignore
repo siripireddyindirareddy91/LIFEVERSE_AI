@@ -5,6 +5,10 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 mobile/android/.kotlin/
+*.jks
+*.keystore
+*.p12
+*.dpapi
 .env
 .env.*
 !.env.example

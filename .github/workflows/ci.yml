@@ -103,3 +103,26 @@ jobs:
           name: dependency-advisories
           path: reports/
           retention-days: 14
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.3"
+          channel: stable
+          cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: flutter pub get --enforce-lockfile
+        working-directory: mobile
+      - run: flutter build web --release --base-href /app/ --no-pub --no-wasm-dry-run --dart-define=APP_ENV=development --dart-define=API_BASE_URL=https://api.invalid
+        working-directory: mobile
+      - run: python tools/package_download_site.py --site-only
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-web-assets
+          path: .tools/cloudflare-web-assets.zip
+          retention-days: 14
