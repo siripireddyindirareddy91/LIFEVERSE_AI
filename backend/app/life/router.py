@@ -3,7 +3,7 @@ from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import Date, cast, delete, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -373,7 +373,7 @@ def erase_memories(payload: EraseMemories, user: User, db: DB):
 @router.get("/dashboard", response_model=DashboardRead)
 def dashboard(user: User, db: DB):
     zone = user_timezone(db, user)
-    today = user_today(db, user)
+    today = now().astimezone(zone).date()
     start = datetime.combine(today, time.min, tzinfo=zone).astimezone(timezone.utc)
     end = datetime.combine(today + timedelta(days=1), time.min, tzinfo=zone).astimezone(
         timezone.utc
@@ -384,12 +384,42 @@ def dashboard(user: User, db: DB):
             select(func.count()).select_from(model).where(model.user_id == user.id, *filters)
         )
 
-    def completed_for(day):
-        begin = datetime.combine(day, time.min, tzinfo=zone).astimezone(timezone.utc)
-        finish = datetime.combine(day + timedelta(days=1), time.min, tzinfo=zone).astimezone(
-            timezone.utc
-        )
-        return count(Task, Task.completed_at >= begin, Task.completed_at < finish)
+    tasks_open, tasks_completed, due_today, overdue = db.execute(
+        select(
+            func.count().filter(Task.status == "todo"),
+            func.count().filter(Task.status == "done"),
+            func.count().filter(Task.status == "todo", Task.due_at >= start, Task.due_at < end),
+            func.count().filter(Task.status == "todo", Task.due_at < now()),
+        ).where(Task.user_id == user.id)
+    ).one()
+    goals_active, goals_completed = db.execute(
+        select(
+            func.count().filter(Goal.progress < 100), func.count().filter(Goal.progress == 100)
+        ).where(Goal.user_id == user.id)
+    ).one()
+    first_day = today - timedelta(days=6)
+    first_start = datetime.combine(first_day, time.min, tzinfo=zone).astimezone(timezone.utc)
+    local_day = cast(func.timezone(str(zone), Task.completed_at), Date)
+    task_days = dict(
+        db.execute(
+            select(local_day, func.count())
+            .where(
+                Task.user_id == user.id, Task.completed_at >= first_start, Task.completed_at < end
+            )
+            .group_by(local_day)
+        ).all()
+    )
+    habit_days = dict(
+        db.execute(
+            select(HabitCheckIn.day, func.count())
+            .where(
+                HabitCheckIn.user_id == user.id,
+                HabitCheckIn.day >= first_day,
+                HabitCheckIn.day <= today,
+            )
+            .group_by(HabitCheckIn.day)
+        ).all()
+    )
 
     checked = db.scalar(
         select(func.count())
@@ -405,22 +435,20 @@ def dashboard(user: User, db: DB):
     return {
         "timezone": str(zone),
         "today": today,
-        "tasks_open": count(Task, Task.status == "todo"),
-        "tasks_completed": count(Task, Task.status == "done"),
-        "tasks_due_today": count(
-            Task, Task.status == "todo", Task.due_at >= start, Task.due_at < end
-        ),
-        "tasks_overdue": count(Task, Task.status == "todo", Task.due_at < now()),
-        "goals_active": count(Goal, Goal.progress < 100),
-        "goals_completed": count(Goal, Goal.progress == 100),
+        "tasks_open": tasks_open,
+        "tasks_completed": tasks_completed,
+        "tasks_due_today": due_today,
+        "tasks_overdue": overdue,
+        "goals_active": goals_active,
+        "goals_completed": goals_completed,
         "habit_count": count(Habit, Habit.active.is_(True)),
         "habits_completed_today": checked,
         "memories_active": count(Memory, *active_memory_filters()),
         "weekly_activity": [
             {
                 "day": day,
-                "tasks_completed": completed_for(day),
-                "habit_checkins": count(HabitCheckIn, HabitCheckIn.day == day),
+                "tasks_completed": task_days.get(day, 0),
+                "habit_checkins": habit_days.get(day, 0),
             }
             for day in [today - timedelta(days=i) for i in range(6, -1, -1)]
         ],

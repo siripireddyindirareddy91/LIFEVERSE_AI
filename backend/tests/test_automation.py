@@ -71,7 +71,7 @@ def tick(a, external_fetch=None):
     with a.dispatch.begin() as db:
         db.execute(
             text(
-                "UPDATE automation_jobs SET due_at = now() WHERE user_id=:owner AND status='pending' AND kind IN ('run','signal','export')"
+                "UPDATE automation_jobs SET due_at = now() - interval '1 second' WHERE user_id=:owner AND status='pending' AND kind IN ('run','signal','export')"
             ),
             {"owner": a.actor.id},
         )
@@ -460,7 +460,10 @@ def test_workflow_waits_for_real_queued_ai_and_resumes(automation):
     tick(a)
     pending = a.client.get("/api/v1/automation/runs/" + queued["id"]).json()
     assert pending["status"] == "waiting_agent"
-    a.work(ScriptedProvider(agent="planner", answer="Test-only reflection. No records changed."))
+    agent = a.work(
+        ScriptedProvider(agent="planner", answer="Test-only reflection. No records changed.")
+    )
+    assert agent["status"] == "completed", agent
     tick(a)
     finished = a.client.get("/api/v1/automation/runs/" + queued["id"]).json()
     assert finished["status"] == "completed" and "Test-only reflection" in finished["summary"]

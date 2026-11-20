@@ -55,6 +55,15 @@ class ApiClient {
     Object? data,
     bool ai = false,
   }) async {
+    final target = Uri.tryParse(path);
+    if (target == null ||
+        !path.startsWith('/') ||
+        path.startsWith('//') ||
+        path.contains('\\') ||
+        target.hasScheme ||
+        target.hasAuthority) {
+      throw const ApiFailure('Choose a path within the configured API.');
+    }
     try {
       final response = await _dio.request<dynamic>(
         path,

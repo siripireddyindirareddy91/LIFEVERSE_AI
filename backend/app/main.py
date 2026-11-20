@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from app.security import PrivateResponsePolicy
 
 from app.auth import Identity, current_identity
 from app.config import get_settings
@@ -41,6 +43,16 @@ app.include_router(modules_router)
 app.include_router(vault_router)
 app.include_router(automation_router)
 app.add_middleware(BodyLimit)
+app.add_middleware(PrivateResponsePolicy)
+
+
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request, error):
+    # Pydantic errors can contain submitted notes, credentials and entire payloads.
+    return JSONResponse(
+        status_code=422,
+        content={"detail": "Invalid request. Check your form values and try again."},
+    )
 
 
 @app.exception_handler(AgentError)

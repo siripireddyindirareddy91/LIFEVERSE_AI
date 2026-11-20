@@ -40,3 +40,34 @@ def test_rls_isolation_and_pool_reset():
             is None
         )
     engine.dispose()
+
+
+@pytest.mark.skipif(
+    not os.getenv("TEST_DATABASE_URL"), reason="Disposable PostgreSQL not configured"
+)
+def test_all_owner_tables_force_rls_and_deny_unscoped_reads():
+    engine = create_engine(os.environ["TEST_DATABASE_URL"])
+    with engine.begin() as db:
+        tables = db.execute(
+            text("""
+            SELECT c.relname, c.relrowsecurity, c.relforcerowsecurity
+            FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+            JOIN pg_attribute a ON a.attrelid=c.oid
+            WHERE n.nspname='public' AND c.relkind='r' AND a.attname='user_id'
+            AND NOT a.attisdropped
+        """)
+        ).all()
+        assert len(tables) >= 30
+        for name, enabled, forced in tables:
+            assert enabled and forced, name
+            assert db.execute(text(f'SELECT count(*) FROM "{name}"')).scalar() == 0, name
+        role = db.execute(
+            text(
+                "SELECT rolsuper,rolbypassrls,rolcreaterole,rolcreatedb FROM pg_roles WHERE rolname=current_user"
+            )
+        ).one()
+        assert role == (False, False, False, False)
+        assert not db.execute(
+            text("SELECT pg_has_role(current_user, 'lifeverse', 'MEMBER')")
+        ).scalar()
+    engine.dispose()

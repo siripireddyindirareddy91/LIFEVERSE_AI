@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class AppConfig {
   const AppConfig({
     this.environment = 'development',
@@ -33,6 +35,7 @@ class AppConfig {
     if (api == null ||
         !['http', 'https'].contains(api.scheme) ||
         api.host.isEmpty ||
+        (api.path.isNotEmpty && api.path != '/') ||
         api.hasQuery ||
         api.hasFragment ||
         api.userInfo.isNotEmpty) {
@@ -51,9 +54,34 @@ class AppConfig {
       if (auth == null ||
           auth.scheme != 'https' ||
           auth.host.isEmpty ||
+          auth.userInfo.isNotEmpty ||
+          (auth.path.isNotEmpty && auth.path != '/') ||
           auth.hasQuery ||
           auth.hasFragment) {
         throw const FormatException('Supabase requires an HTTPS project URL.');
+      }
+      if (supabaseKey.startsWith('sb_secret_')) {
+        throw const FormatException('Use a public Supabase key in the app.');
+      }
+      final parts = supabaseKey.split('.');
+      if (parts.length == 3) {
+        Map<String, dynamic>? claims;
+        try {
+          claims =
+              jsonDecode(
+                    utf8.decode(
+                      base64Url.decode(base64Url.normalize(parts[1])),
+                    ),
+                  )
+                  as Map<String, dynamic>;
+        } catch (_) {
+          throw const FormatException('Invalid Supabase public key.');
+        }
+        if (claims['role'] != 'anon') {
+          throw const FormatException(
+            'Use a public Supabase anon key in the app.',
+          );
+        }
       }
     }
     if (environment != 'development' && !authConfigured) {

@@ -11,6 +11,9 @@ __pycache__/
 mobile/config/*.json
 !mobile/config/*.example.json
 coverage/
+.coverage
+.coverage.*
+reports/
 *.log
 *.egg-info/
 .DS_Store

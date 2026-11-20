@@ -1,0 +1,2 @@
+# Isolated advisory tooling; not installed in the application runtime.
+pip-audit==2.10.1

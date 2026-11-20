@@ -1,4 +1,6 @@
+# Fully pinned backend and test environment. Regenerate from backend[dev].
 alembic==1.16.1
+annotated-doc==0.0.7
 annotated-types==0.8.0
 anyio==4.16.0
 certifi==2026.10.23
@@ -6,9 +8,10 @@ cffi==2.1.1
 charset-normalizer==3.5.2
 click==8.5.1
 colorama==0.4.6
+coverage==7.13.4
 cryptography==50.0.2
 distro==1.9.0
-fastapi==0.115.12
+fastapi==0.165.0
 greenlet==3.5.6
 h11==0.16.0
 httpcore==1.0.9
@@ -22,13 +25,14 @@ jsonpatch==1.47
 jsonpointer==3.12
 langchain-core==1.8.3
 langchain-protocol==0.0.21
-langgraph==1.0.5
-langgraph-checkpoint==3.0.1
-langgraph-prebuilt==1.0.13
-langgraph-sdk==0.3.15
+langgraph==1.2.24
+langgraph-checkpoint==4.3.2
+langgraph-prebuilt==1.1.3
+langgraph-sdk==0.4.14
 langsmith==0.15.0
 Mako==1.4.3
 MarkupSafe==3.0.4
+opentelemetry-api==1.45.2
 orjson==3.13.0
 ormsgpack==1.13.1
 packaging==26.3
@@ -39,8 +43,9 @@ pycparser==3.12
 pydantic==2.14.3
 pydantic-settings==2.9.1
 pydantic_core==2.50.4
-PyJWT==2.10.1
-pytest==8.3.5
+Pygments==2.21.0
+PyJWT==2.15.1
+pytest==9.2.0
 python-dotenv==1.2.4
 PyYAML==6.0.3
 requests==2.34.2
@@ -48,7 +53,7 @@ requests-toolbelt==1.0.0
 ruff==0.11.12
 sniffio==1.3.1
 SQLAlchemy==2.0.41
-starlette==0.46.2
+starlette==1.10.0
 tenacity==9.2.1
 truststore==0.10.5
 typing-inspection==0.4.5

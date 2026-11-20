@@ -30,6 +30,14 @@ def current_identity(
     if not settings.supabase_url:
         raise HTTPException(503, "Supabase authentication requires configuration")
     try:
+        if len(credentials.credentials) > 16384:
+            raise ValueError("Token limit")
+        header = jwt.get_unverified_header(credentials.credentials)
+        if header.get("alg") not in {"ES256", "RS256"}:
+            raise ValueError("Unsupported signing algorithm")
+        kid = header.get("kid")
+        if not isinstance(kid, str) or not 1 <= len(kid) <= 200:
+            raise ValueError("Missing or invalid signing key identifier")
         key = jwks_client(settings.supabase_url).get_signing_key_from_jwt(credentials.credentials)
         claims = jwt.decode(
             credentials.credentials,

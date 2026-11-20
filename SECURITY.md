@@ -1,5 +1,8 @@
 # Foundation security
 
+Phase 7: [review and remaining release gaps](docs/PHASE_7_SECURITY_REVIEW.md),
+[verification](docs/PHASE_7_VERIFICATION.md), and [repeatable tests](docs/TESTING.md).
+
 - Never commit `.env`, mobile config overrides, tokens or signing keys.
 - Mobile receives only the public Supabase publishable/anon key. Never ship a
   Supabase service-role key, database password or provider secret.
@@ -85,3 +88,10 @@ and reconciliation marker; Microsoft uses transactionId. Unknown write outcomes
 require explicit reconciliation. Leases and generation fencing prevent a stale
 worker from committing a reclaimed job. Notification dismissal erases content,
 and generic device previews avoid exposing private reports on the lock screen.
+
+Phase 7 applies no-store to API responses/errors, removes raw validation input
+from 422 responses, bounds unsupported tokens before key lookup, hardens mobile
+credential destinations and upgrades dependencies with published advisories.
+API, signed-token, RLS, approval, provider and concurrency regressions run in CI
+with coverage/advisory artifacts. Full account lifecycle, live services, physical
+devices and production operations remain release gaps documented in the review.

@@ -1,0 +1,39 @@
+{
+  "verification_date": "2026-11-20",
+  "timezone": "Asia/Calcutta",
+  "phase6_commit": "b2429d7ea6ff7a42643e423ad7a3f6bdb3e47d8e",
+  "phase6_actions_run": 44685191542,
+  "phase6_checks": {
+    "backend": "success",
+    "mobile": "success"
+  },
+  "phase7_branch": "codex/phase-7-testing-security",
+  "phase7_pushed": false,
+  "backend_tests_passed": 209,
+  "protected_method_paths_tested": 104,
+  "backend_combined_coverage_percent": 81.74,
+  "backend_statement_coverage_percent": 85.77,
+  "backend_branch_coverage_percent": 65.46,
+  "flutter_tests_passed": 70,
+  "flutter_analysis": "no issues",
+  "mobile_non_generated_line_coverage_percent": 60.44,
+  "android_debug_build": "success",
+  "python_locked_versions_audited": 67,
+  "dart_hosted_versions_audited": 149,
+  "known_dependency_vulnerabilities_after_updates": 0,
+  "advisory_exclusions": [],
+  "performance": {
+    "scope": "in-process ASGI with disposable PostgreSQL; no production network/TLS/provider latency",
+    "records": 2000,
+    "requests": 48,
+    "concurrency": 8,
+    "errors": 0,
+    "median_ms": 137.37,
+    "p95_ms": 250.45,
+    "max_ms": 336.92,
+    "requests_per_second": 52.41,
+    "p95_budget_ms": 5000,
+    "dashboard_statements": 9
+  },
+  "limitations_document": "PHASE_7_SECURITY_REVIEW.md"
+}

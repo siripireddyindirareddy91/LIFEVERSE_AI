@@ -186,3 +186,13 @@ Exports recheck connection revision and local-event contents before publication.
 An uncertain provider response is shown for explicit reconciliation, never silently
 retried as a new event. Notifications show generic device lock-screen text;
 dismissal erases content while retaining a deduplication tombstone.
+
+## Phase 7 response policy
+
+Private API responses and handled errors use `Cache-Control: no-store` with
+browser MIME/referrer/framing restrictions. Validation failures return status 422
+and a generic `detail` message; submitted values and validator context are omitted.
+JWT headers must identify a supported EC/RSA signing key and fit the bounded token
+size; full signature and claims verification still follows. Authentication and
+provider outages retain their existing 401/503 distinctions. See
+[testing](docs/TESTING.md) and [security review](docs/PHASE_7_SECURITY_REVIEW.md).

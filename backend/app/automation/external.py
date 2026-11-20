@@ -31,7 +31,7 @@ def request_json(
                 if response.status_code >= 300:
                     raise ValueError("Redirect denied")
                 result = json.loads(content)
-                if not isinstance(result, (dict, list)):
+                if not isinstance(result, dict):
                     raise ValueError()
                 return result
     except HTTPException:
@@ -59,6 +59,8 @@ def fetch(spec: External, transport=None):
             transport=transport,
         )
         current = value.get("current", {})
+        if not isinstance(current, dict):
+            raise HTTPException(503, "Weather data was incomplete.")
         temperature = current.get("temperature_2m")
         if (
             not isinstance(temperature, (int, float))
